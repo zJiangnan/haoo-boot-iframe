@@ -26,7 +26,6 @@ public class DemoServiceImpl extends ServiceImpl<DemoMapper, Demo> implements De
 
         Page<Demo> userPage = new Page<>(current, size);
         Page<Demo> pageList = demoMapper.selectPage(userPage, new QueryWrapper<>());
-
         return new ResultMessage(200, "success", pageList);
     }
 
