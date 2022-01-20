@@ -8,7 +8,7 @@ import com.github.pagehelper.PageInfo;
 import com.haoo.iframe.entity.Demo;
 import com.haoo.iframe.mybatis.demo.DemoMapper;
 import com.haoo.iframe.service.DemoService;
-import com.haoo.iframe.util.ResultMessage;
+import com.haoo.iframe.util.ReturnResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +19,7 @@ public class DemoServiceImpl extends ServiceImpl<DemoMapper, Demo> implements De
     private DemoMapper demoMapper;
 
     @Override
-    public ResultMessage findPage() {
+    public ReturnResponse findPage() {
 
         Integer current = 1;
         Integer size = 1;
@@ -27,7 +27,7 @@ public class DemoServiceImpl extends ServiceImpl<DemoMapper, Demo> implements De
         Page<Demo> userPage = new Page<>(current, size);
         Page<Demo> pageList = demoMapper.selectPage(userPage, new QueryWrapper<>());
 
-        return new ResultMessage(200, "success", pageList);
+        return new ReturnResponse(200, "success", pageList);
     }
 
     @Override
