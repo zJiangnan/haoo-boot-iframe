@@ -6,7 +6,7 @@ import java.util.Random;
 
 public class OtherUtil {
 
-    private static void println(Object obj) {
+    public static void println(Object obj) {
         /*
         颜色代码: QUOTE:
         字背景颜色范围: 40--49          字颜色: 30—39

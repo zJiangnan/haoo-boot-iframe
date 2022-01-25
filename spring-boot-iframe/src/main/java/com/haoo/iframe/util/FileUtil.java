@@ -16,7 +16,7 @@ public class FileUtil {
      * @param newSource
      * @param name
      */
-    public static void copyToFolder(String oldSource, String newSource, String name) throws IOException {
+    public static void renameFileTo(String oldSource, String newSource, String name) throws IOException {
         //源目标文件
         File oldFile = new File(oldSource);
         //目的路径
@@ -59,7 +59,7 @@ public class FileUtil {
      *
      * @param source
      */
-    public static void delFile(String source) {
+    public static void deleteFile(String source) {
         File file = new File(source);
         //删除
         try {
@@ -79,7 +79,7 @@ public class FileUtil {
      * @param newSource
      * @throws IOException
      */
-    public static void folderTransfer(String oldSource, String newSource) {
+    public static void dirsCopyTo(String oldSource, String newSource) {
         try {
 
             File start = new File(oldSource);
@@ -91,11 +91,11 @@ public class FileUtil {
             }
             //是否是文件
             if (start.isFile()) {
-                createFolder(end.getParent());
-                fileCopy(start.getParent(), end.getParent(), start.getName());
+                mkDirs(end.getParent());
+                dirsCopy(start.getParent(), end.getParent(), start.getName());
             } else {
                 for (String temp : filePath) {
-                    fileCopy(oldSource, newSource, temp);
+                    dirsCopy(oldSource, newSource, temp);
                 }
             }
         } catch (IOException e) {
@@ -104,7 +104,7 @@ public class FileUtil {
     }
 
 
-    private static void fileCopy(String sourcePathDir, String newPathDir, String temp) throws IOException {
+    private static void dirsCopy(String sourcePathDir, String newPathDir, String temp) throws IOException {
         //为文件则进行拷贝
         String sourcePath = sourcePathDir + File.separator + temp;
         String newPath = newPathDir + File.separator + temp;
@@ -125,7 +125,7 @@ public class FileUtil {
             fileInputStream.close();
             fileOutputStream.close();
         } else {
-            folderTransfer(sourcePath, newPath);
+            dirsCopyTo(sourcePath, newPath);
         }
     }
 
@@ -135,7 +135,7 @@ public class FileUtil {
      *
      * @param source
      */
-    public static void createFolder(String source) {
+    public static void mkDirs(String source) {
         File file = new File(source);
         if (!file.exists()) {
             file.mkdirs();
@@ -200,13 +200,14 @@ public class FileUtil {
 
     /**
      * 指定每一份文件的边界写入不同的文件中
-     * @param file 源文件
+     *
+     * @param file  源文件
      * @param index 文件顺序标识
      * @param begin 开始指针的位置
-     * @param end 结束指针的位置
+     * @param end   结束指针的位置
      * @return 文件指针
      */
-    public static long getWrite(String file, int index, long begin, long end){
+    public static long getWrite(String file, int index, long begin, long end) {
 
         long endPointer = 0L;
 
@@ -214,13 +215,13 @@ public class FileUtil {
             //声明切割文件磁盘空间
             RandomAccessFile in = new RandomAccessFile(new File(file), "r");
             //定义一个可读可写并且后缀名为.tmp二进制的临时文件
-            RandomAccessFile out = new RandomAccessFile(file+"_"+index+".tmp", "rw");
+            RandomAccessFile out = new RandomAccessFile(file + "_" + index + ".tmp", "rw");
             //声明具体每一个文件字节数组为1024
             byte[] b = new byte[1024];
             //从指定文件读取字节流
             in.seek(begin);
             int n = 0;
-            while (in.getFilePointer() <= end && (n =in.read(b)) != -1) {
+            while (in.getFilePointer() <= end && (n = in.read(b)) != -1) {
                 out.write(b, 0, n); //写入不同的二进制文件
             }
             //定义当前读取文件指针
@@ -239,10 +240,11 @@ public class FileUtil {
 
     /**
      * 文件切片
-     * @param file 需要被切割的源文件
+     *
+     * @param file  需要被切割的源文件
      * @param count 切割文件的个数
      */
-    private static void getSplitFile(String file, int count){
+    private static void splitFile(String file, int count) {
         try {
             //预分配文件占用磁盘空间“r”表示只读的方式“rw”支持文件随机读取和写入
             RandomAccessFile raf = new RandomAccessFile(new File(file), "r");
@@ -253,17 +255,17 @@ public class FileUtil {
             //定义初始文件偏移量（读取文件进度）
             long offset = 0L;
             //开始切割
-            for(int i = 0; i < count-1; i++){ //count-1 其中的一份文件不处理
+            for (int i = 0; i < count - 1; i++) { //count-1 其中的一份文件不处理
                 //初始化
                 long fbegin = offset;
                 //分割第几份文件
-                long fend = (i+1) * maxSize;
+                long fend = (i + 1) * maxSize;
                 //写入二进制临时文件中
                 offset = getWrite(file, i, fbegin, fend);
             }
             //将剩余的写入到最后一份文件中
-            if((int)(length - offset) > 0){
-                getWrite(file, count-1, offset, length);
+            if ((int) (length - offset) > 0) {
+                getWrite(file, count - 1, offset, length);
             }
 
         } catch (Exception e) {
@@ -273,22 +275,23 @@ public class FileUtil {
 
     /**
      * 合并文件
-     * @param file 指定合并后的文件
+     *
+     * @param file     指定合并后的文件
      * @param tempFile 分割前的文件名
      * @param temCount 文件的个数
      */
-    public static void merge(String file, String tempFile, int temCount){
+    public static void mergeSplitFile(String file, String tempFile, int temCount) {
         RandomAccessFile raf = null;
         try {
             // 声明随机可读可写的文件
             raf = new RandomAccessFile(new File(file), "rw");
             // 开始合并文件，对应切片的二进制文件
-            for(int i = 0; i < temCount; i++){
+            for (int i = 0; i < temCount; i++) {
                 RandomAccessFile reader = new RandomAccessFile(
-                        new File(tempFile+"_"+i+".tmp"), "r");
+                        new File(tempFile + "_" + i + ".tmp"), "r");
                 byte[] b = new byte[1024];
                 int n = 0;
-                while((n = reader.read(b)) != -1){
+                while ((n = reader.read(b)) != -1) {
                     raf.write(b, 0, n);
                 }
             }
@@ -305,12 +308,31 @@ public class FileUtil {
     }
 
     public static void main(String[] args) {
+        //方法说明
+        showMethod();
+
         String file = "C:\\Users\\ccp-114\\Desktop\\ddd\\qqqqq.docx";
         int count = 8;
         int temCount = count;
         String tempFile = file;
-        getSplitFile(file, count);
-        merge(file, tempFile, temCount);
+        splitFile(file, count);
+        mergeSplitFile(file, tempFile, temCount);
+        for (int i = 0; i < temCount; i++) {
+            deleteFile(tempFile + "_" + i + ".tmp");
+        }
+
+    }
+
+    public static void showMethod() {
+        OtherUtil.println("文件切片:【splitFile】");
+        OtherUtil.println("文件切片合并:【mergeSplitFile】");
+        OtherUtil.println("移动文件并重命名:【renameFileTo】");
+        OtherUtil.println("创建文件:【createFile】");
+        OtherUtil.println("删除文件:【deleteFile】");
+        OtherUtil.println("文件迁移至【目录】:【dirsCopyTo】");
+        OtherUtil.println("创建目录:【mkDirs】");
+        OtherUtil.println("删除文件夹及目录下所有文件:【removeDir】");
+        OtherUtil.println("下载文件方法:【download】");
     }
 
 }
