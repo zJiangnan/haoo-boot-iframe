@@ -1,10 +1,12 @@
 package com.haoo.iframe.util;
 
+import org.apache.commons.lang.StringUtils;
+
 import java.util.Random;
 
 public class OtherUtil {
 
-    private static void println(Object obj){
+    private static void println(Object obj) {
         /*
         颜色代码: QUOTE:
         字背景颜色范围: 40--49          字颜色: 30—39
@@ -28,6 +30,28 @@ public class OtherUtil {
         int min = 30;
         int color = rand.nextInt(max - min + 1) + min;
         System.out.println("\033[1;" + color + "m" + obj + "\033[0m");
+    }
+
+    /**
+     * 随机key
+     *
+     * @return
+     */
+    public static String random(String code) {
+        int random = (int) (Math.random() * 1000);
+        String key = System.currentTimeMillis() + random + "";
+        return StringUtils.isEmpty(code) ? key : code + key;
+    }
+
+    /**
+     * 随机key
+     *
+     * @return
+     */
+    public static String random() {
+        int random = (int) (Math.random() * 1000);
+        String key = System.currentTimeMillis() + random + "";
+        return key;
     }
 
 }

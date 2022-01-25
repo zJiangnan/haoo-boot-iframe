@@ -1,7 +1,6 @@
 package com.haoo.iframe.util;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.StringUtils;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
@@ -199,27 +198,119 @@ public class FileUtil {
         }
     }
 
+    /**
+     * 指定每一份文件的边界写入不同的文件中
+     * @param file 源文件
+     * @param index 文件顺序标识
+     * @param begin 开始指针的位置
+     * @param end 结束指针的位置
+     * @return 文件指针
+     */
+    public static long getWrite(String file, int index, long begin, long end){
+
+        long endPointer = 0L;
+
+        try {
+            //声明切割文件磁盘空间
+            RandomAccessFile in = new RandomAccessFile(new File(file), "r");
+            //定义一个可读可写并且后缀名为.tmp二进制的临时文件
+            RandomAccessFile out = new RandomAccessFile(file+"_"+index+".tmp", "rw");
+            //声明具体每一个文件字节数组为1024
+            byte[] b = new byte[1024];
+            //从指定文件读取字节流
+            in.seek(begin);
+            int n = 0;
+            while (in.getFilePointer() <= end && (n =in.read(b)) != -1) {
+                out.write(b, 0, n); //写入不同的二进制文件
+            }
+            //定义当前读取文件指针
+            endPointer = in.getFilePointer();
+            //关闭输入流
+            in.close();
+            //关闭输出流
+            out.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return endPointer;
+    }
+
 
     /**
-     * 随机key
-     *
-     * @return
+     * 文件切片
+     * @param file 需要被切割的源文件
+     * @param count 切割文件的个数
      */
-    public static String random(String code) {
-        int random = (int) (Math.random() * 1000);
-        String key = System.currentTimeMillis() + random + "";
-        return StringUtils.isEmpty(code) ? key : code + key;
+    private static void getSplitFile(String file, int count){
+        try {
+            //预分配文件占用磁盘空间“r”表示只读的方式“rw”支持文件随机读取和写入
+            RandomAccessFile raf = new RandomAccessFile(new File(file), "r");
+            //文件长度
+            long length = raf.length();
+            //计算切片后，每一文件的大小
+            long maxSize = length / count;
+            //定义初始文件偏移量（读取文件进度）
+            long offset = 0L;
+            //开始切割
+            for(int i = 0; i < count-1; i++){ //count-1 其中的一份文件不处理
+                //初始化
+                long fbegin = offset;
+                //分割第几份文件
+                long fend = (i+1) * maxSize;
+                //写入二进制临时文件中
+                offset = getWrite(file, i, fbegin, fend);
+            }
+            //将剩余的写入到最后一份文件中
+            if((int)(length - offset) > 0){
+                getWrite(file, count-1, offset, length);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
-     * 随机key
-     *
-     * @return
+     * 合并文件
+     * @param file 指定合并后的文件
+     * @param tempFile 分割前的文件名
+     * @param temCount 文件的个数
      */
-    public static String random() {
-        int random = (int) (Math.random() * 1000);
-        String key = System.currentTimeMillis() + random + "";
-        return key;
+    public static void merge(String file, String tempFile, int temCount){
+        RandomAccessFile raf = null;
+        try {
+            // 声明随机可读可写的文件
+            raf = new RandomAccessFile(new File(file), "rw");
+            // 开始合并文件，对应切片的二进制文件
+            for(int i = 0; i < temCount; i++){
+                RandomAccessFile reader = new RandomAccessFile(
+                        new File(tempFile+"_"+i+".tmp"), "r");
+                byte[] b = new byte[1024];
+                int n = 0;
+                while((n = reader.read(b)) != -1){
+                    raf.write(b, 0, n);
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                raf.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        String file = "C:\\Users\\ccp-114\\Desktop\\ddd\\qqqqq.docx";
+        int count = 8;
+        int temCount = count;
+        String tempFile = file;
+        getSplitFile(file, count);
+        merge(file, tempFile, temCount);
     }
 
 }
