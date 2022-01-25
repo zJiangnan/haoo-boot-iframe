@@ -294,6 +294,7 @@ public class FileUtil {
                 while ((n = reader.read(b)) != -1) {
                     raf.write(b, 0, n);
                 }
+                reader.close();
             }
 
         } catch (Exception e) {
@@ -315,7 +316,7 @@ public class FileUtil {
         int count = 8;
         int temCount = count;
         String tempFile = file;
-        splitFile(file, count);
+//        splitFile(file, count);
         mergeSplitFile(file, tempFile, temCount);
         for (int i = 0; i < temCount; i++) {
             deleteFile(tempFile + "_" + i + ".tmp");
