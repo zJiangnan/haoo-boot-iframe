@@ -1,26 +1,29 @@
 package com.haoo.iframe.controller;
 
 import com.haoo.iframe.entity.Demo;
+import com.haoo.iframe.request.DemoReq;
 import com.haoo.iframe.service.DemoService;
-import com.haoo.iframe.util.RedisUtils;
+import com.haoo.iframe.util.FileUtil;
+import com.haoo.iframe.util.RedisUtil;
 import com.haoo.iframe.util.ReturnResponse;
+import com.haoo.iframe.util.ZipFileUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-@Api(tags = "demo控制器")
+@Api(tags = "测试控制器")
 @RestController
-@RequestMapping("")
+@RequestMapping("/api/v1/")
 public class UserController {
 
     @Autowired
-    private RedisUtils redisUtils;
+    private RedisUtil redisUtil;
 
     @Autowired
     private DemoService demoService;
@@ -46,6 +49,24 @@ public class UserController {
         demo.setTestName("testname");
         list.add(demo);
         return new ReturnResponse(200, "成功", demoService.saveBatch(list));
+    }
+
+    @ApiOperation("下载压缩包")
+    @PostMapping(value = "/downloadZip")
+    public void downloadZip(@RequestBody DemoReq req, HttpServletResponse response) {
+
+        File[] srcFile = new File[req.getSrcPath().length];
+
+        for (int i = 0; i < req.getSrcPath().length; i++) {
+            File file = new File(req.getSrcPath()[i]);
+            srcFile[i] = file;
+        }
+        //压缩后的文件目录
+        String zipFilePath = req.getZipPath();
+        File zipFile = new File(zipFilePath);
+        //压缩文件 及 下载
+        ZipFileUtil.zipFiles(srcFile, zipFile);
+        FileUtil.download(zipFilePath,response);
     }
 
 

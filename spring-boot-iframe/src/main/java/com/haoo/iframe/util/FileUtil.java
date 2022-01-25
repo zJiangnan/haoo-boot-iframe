@@ -8,7 +8,7 @@ import java.io.*;
 import java.nio.file.Files;
 
 @Slf4j
-public class FileUtils {
+public class FileUtil {
 
     /**
      * 在新的目录生成重命名文件
@@ -205,7 +205,7 @@ public class FileUtils {
      *
      * @return
      */
-    public static String getRamdomKey(String code) {
+    public static String random(String code) {
         int random = (int) (Math.random() * 1000);
         String key = System.currentTimeMillis() + random + "";
         return StringUtils.isEmpty(code) ? key : code + key;
@@ -216,7 +216,7 @@ public class FileUtils {
      *
      * @return
      */
-    public static String getVoidKey() {
+    public static String random() {
         int random = (int) (Math.random() * 1000);
         String key = System.currentTimeMillis() + random + "";
         return key;

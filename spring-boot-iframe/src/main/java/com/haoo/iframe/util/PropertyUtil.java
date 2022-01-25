@@ -9,17 +9,17 @@ import java.util.Properties;
  * @author Logan
  *
  */
-public class PropertyUtils {
+public class PropertyUtil {
     private static Properties property = new Properties();
     public static String[] rules;
     public static boolean swaggerEnabled;
     static {
         try (
-                InputStream in = PropertyUtils.class.getResourceAsStream("/swagger-custom.properties");
+                InputStream in = PropertyUtil.class.getResourceAsStream("/swagger-custom.properties");
         ) {
             property.load(in);
-            rules = PropertyUtils.get("rules").split(",");
-            swaggerEnabled = Boolean.parseBoolean(PropertyUtils.get("swaggerEnabled"));
+            rules = PropertyUtil.get("rules").split(",");
+            swaggerEnabled = Boolean.parseBoolean(PropertyUtil.get("swaggerEnabled"));
         } catch (Exception e) {
             e.printStackTrace();
         }

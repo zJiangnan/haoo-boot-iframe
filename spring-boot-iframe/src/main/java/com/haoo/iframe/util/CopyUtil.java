@@ -7,7 +7,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CopyUtils {
+public class CopyUtil {
 
     public static class CopyClass implements Serializable {
         private String name;
