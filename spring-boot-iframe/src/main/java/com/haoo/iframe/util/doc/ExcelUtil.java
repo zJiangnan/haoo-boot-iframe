@@ -2,9 +2,6 @@ package com.haoo.iframe.util.doc;
 
 import com.haoo.iframe.errcode.ApiCode;
 import com.haoo.iframe.errcode.BizException;
-import com.alibaba.excel.EasyExcel;
-import com.alibaba.excel.ExcelWriter;
-import com.alibaba.excel.write.metadata.WriteSheet;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.CharUtils;
@@ -82,7 +79,7 @@ public class ExcelUtil {
         List<Field> fields = Stream.of(cls.getDeclaredFields()).collect(Collectors.toList());
         fields.forEach(
                 field -> {
-                    com.haoo.iframe.utils.ExcelColumn annotation = field.getAnnotation(com.haoo.iframe.utils.ExcelColumn.class);
+                    ExcelColumn annotation = field.getAnnotation(ExcelColumn.class);
                     if (annotation != null) {
                         String value = annotation.value();
                         if (StringUtils.isBlank(value)) {
@@ -332,7 +329,7 @@ public class ExcelUtil {
         Field[] fields = cls.getDeclaredFields();
         List<Field> fieldList = Arrays.stream(fields)
                 .filter(field -> {
-                    com.haoo.iframe.utils.ExcelColumn annotation = field.getAnnotation(com.haoo.iframe.utils.ExcelColumn.class);
+                    ExcelColumn annotation = field.getAnnotation(ExcelColumn.class);
                     if (annotation != null && annotation.col() > 0) {
                         field.setAccessible(true);
                         return true;
@@ -340,7 +337,7 @@ public class ExcelUtil {
                     return false;
                 }).sorted(Comparator.comparing(field -> {
                     int col = 0;
-                    com.haoo.iframe.utils.ExcelColumn annotation = field.getAnnotation(com.haoo.iframe.utils.ExcelColumn.class);
+                    ExcelColumn annotation = field.getAnnotation(ExcelColumn.class);
                     if (annotation != null) {
                         col = annotation.col();
                     }
@@ -355,7 +352,7 @@ public class ExcelUtil {
             AtomicInteger aj = new AtomicInteger();
             //写入头部
             fieldList.forEach(field -> {
-                com.haoo.iframe.utils.ExcelColumn annotation = field.getAnnotation(com.haoo.iframe.utils.ExcelColumn.class);
+                ExcelColumn annotation = field.getAnnotation(ExcelColumn.class);
                 String columnName = "";
                 if (annotation != null) {
                     columnName = annotation.value();
