@@ -1,4 +1,4 @@
-package cn.echo.enterprise.utils;
+package com.haoo.iframe.utils;
 
 import java.lang.annotation.*;
 

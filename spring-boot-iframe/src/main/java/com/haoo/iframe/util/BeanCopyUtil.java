@@ -1,4 +1,4 @@
-package cn.echo.springboottest.utils;
+package com.haoo.iframe.utils;
 
 import jodd.bean.BeanCopy;
 
