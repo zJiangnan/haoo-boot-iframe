@@ -1,10 +1,9 @@
-package com.haoo.iframe.config;
+package com.haoo.iframe.common;
 
 import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
 //@Configuration MybatisPlus分页 与 PageHelper 二选一
 public class MybatisPlusConfig {

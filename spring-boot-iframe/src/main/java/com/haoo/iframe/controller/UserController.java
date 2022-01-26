@@ -6,11 +6,13 @@ import com.haoo.iframe.service.DemoService;
 import com.haoo.iframe.util.FileUtil;
 import com.haoo.iframe.util.RedisUtil;
 import com.haoo.iframe.util.ReturnResponse;
-import com.haoo.iframe.util.ZipFileUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
@@ -65,7 +67,7 @@ public class UserController {
         String zipFilePath = req.getZipPath();
         File zipFile = new File(zipFilePath);
         //压缩文件 及 下载
-        ZipFileUtil.zipFiles(srcFile, zipFile);
+        FileUtil.zipFiles(srcFile, zipFile);
         FileUtil.download(zipFilePath,response);
     }
 

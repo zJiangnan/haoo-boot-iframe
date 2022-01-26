@@ -1,7 +1,7 @@
 package com.haoo.iframe.util;
 
-import com.haoo.iframe.errcode.ApiCode;
-import com.haoo.iframe.errcode.BizException;
+import com.haoo.iframe.common.ApiCode;
+import com.haoo.iframe.common.BizException;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
