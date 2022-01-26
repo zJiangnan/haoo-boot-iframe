@@ -5,6 +5,10 @@ import lombok.extern.slf4j.Slf4j;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.nio.file.Files;
+import java.util.Enumeration;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
+import java.util.zip.ZipOutputStream;
 
 @Slf4j
 public class FileUtil {
@@ -308,6 +312,78 @@ public class FileUtil {
         }
     }
 
+
+    /**
+     * 功能:压缩多个文件成一个zip文件
+     *
+     * @param srcfile：源文件列表
+     * @param zipfile：压缩后的文件
+     */
+    public static void zipFiles(File[] srcfile, File zipfile) {
+        byte[] buf = new byte[1024];
+        try {
+            //ZipOutputStream类：完成文件或文件夹的压缩
+            ZipOutputStream out = new ZipOutputStream(new FileOutputStream(zipfile));
+            for (int i = 0; i < srcfile.length; i++) {
+                FileInputStream in = new FileInputStream(srcfile[i]);
+                out.putNextEntry(new ZipEntry(srcfile[i].getName()));
+                int len;
+                while ((len = in.read(buf)) > 0) {
+                    out.write(buf, 0, len);
+                }
+                out.closeEntry();
+                in.close();
+            }
+            out.close();
+            log.info("压缩完成.");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 功能:解压缩
+     *
+     * @param zipfile：需要解压缩的文件
+     * @param descDir：解压后的目标目录
+     */
+    public static void unZipFiles(File zipfile, String descDir) {
+        try {
+            ZipFile zf = new ZipFile(zipfile);
+            for (Enumeration entries = zf.entries(); entries.hasMoreElements(); ) {
+                ZipEntry entry = (ZipEntry) entries.nextElement();
+                String zipEntryName = entry.getName();
+                InputStream in = zf.getInputStream(entry);
+                OutputStream out = new FileOutputStream(descDir + zipEntryName);
+                byte[] buf1 = new byte[1024];
+                int len;
+                while ((len = in.read(buf1)) > 0) {
+                    out.write(buf1, 0, len);
+                }
+                in.close();
+                out.close();
+                log.info("解压缩完成.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void showMethod() {
+        OtherUtil.println("文件切片:【splitFile】");
+        OtherUtil.println("文件切片合并:【mergeSplitFile】");
+        OtherUtil.println("移动文件并重命名:【renameFileTo】");
+        OtherUtil.println("创建文件:【createFile】");
+        OtherUtil.println("删除文件:【deleteFile】");
+        OtherUtil.println("文件迁移至【目录】:【dirsCopyTo】");
+        OtherUtil.println("创建目录:【mkDirs】");
+        OtherUtil.println("删除文件夹及目录下所有文件:【removeDir】");
+        OtherUtil.println("下载文件方法:【download】");
+        OtherUtil.println("压缩文件:【zipFiles】");
+        OtherUtil.println("解压文件:【unZipFiles】");
+    }
+
+
     public static void main(String[] args) {
         //方法说明
         showMethod();
@@ -322,18 +398,22 @@ public class FileUtil {
             deleteFile(tempFile + "_" + i + ".tmp");
         }
 
+        //2个源文件
+        File f1 = new File("D:\\ziptest\\test\\abc.txt");
+        File f2 = new File("D:\\ziptest\\test\\test.zip");
+        File[] srcfile = {f1, f2};
+        //压缩后的文件
+        File zipfile = new File("D:\\ziptest\\test\\bao.zip");
+        zipFiles(srcfile, zipfile);
+        //需要解压缩的文件
+        //File file=new File("D:\\workspace\\flexTest\\src\\com\\biao\\test\\biao.zip");
+        //解压后的目标目录
+        //String dir="D:\\workspace\\flexTest\\src\\com\\biao\\test\\";
+        //ZipFileUtil.unZipFiles(file, dir);
+
     }
 
-    public static void showMethod() {
-        OtherUtil.println("文件切片:【splitFile】");
-        OtherUtil.println("文件切片合并:【mergeSplitFile】");
-        OtherUtil.println("移动文件并重命名:【renameFileTo】");
-        OtherUtil.println("创建文件:【createFile】");
-        OtherUtil.println("删除文件:【deleteFile】");
-        OtherUtil.println("文件迁移至【目录】:【dirsCopyTo】");
-        OtherUtil.println("创建目录:【mkDirs】");
-        OtherUtil.println("删除文件夹及目录下所有文件:【removeDir】");
-        OtherUtil.println("下载文件方法:【download】");
-    }
+
+
 
 }
