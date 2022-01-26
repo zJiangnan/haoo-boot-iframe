@@ -1,4 +1,4 @@
-package com.haoo.iframe.utils;
+package com.haoo.iframe.util.doc;
 
 import com.haoo.iframe.errcode.ApiCode;
 import com.haoo.iframe.errcode.BizException;
@@ -82,7 +82,7 @@ public class ExcelUtil {
         List<Field> fields = Stream.of(cls.getDeclaredFields()).collect(Collectors.toList());
         fields.forEach(
                 field -> {
-                    ExcelColumn annotation = field.getAnnotation(ExcelColumn.class);
+                    com.haoo.iframe.utils.ExcelColumn annotation = field.getAnnotation(com.haoo.iframe.utils.ExcelColumn.class);
                     if (annotation != null) {
                         String value = annotation.value();
                         if (StringUtils.isBlank(value)) {
@@ -250,7 +250,7 @@ public class ExcelUtil {
         String cellValue = "";
         // 以下是判断数据的类型
         switch (cell.getCellType()) {
-            case Cell.CELL_TYPE_NUMERIC: // 数字
+            case NUMERIC: // 数字
                 if (org.apache.poi.ss.usermodel.DateUtil.isCellDateFormatted(cell)) {
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                     cellValue = sdf.format(DateUtil.getJavaDate(cell.getNumericCellValue())).toString();
@@ -259,19 +259,19 @@ public class ExcelUtil {
                     cellValue = dataFormatter.formatCellValue(cell);
                 }
                 break;
-            case Cell.CELL_TYPE_STRING: // 字符串
+            case STRING: // 字符串
                 cellValue = cell.getStringCellValue();
                 break;
-            case Cell.CELL_TYPE_BOOLEAN: // Boolean
+            case BOOLEAN: // Boolean
                 cellValue = cell.getBooleanCellValue() + "";
                 break;
-            case Cell.CELL_TYPE_FORMULA: // 公式
+            case FORMULA: // 公式
                 cellValue = cell.getCellFormula() + "";
                 break;
-            case Cell.CELL_TYPE_BLANK: // 空值
+            case BLANK: // 空值
                 cellValue = "";
                 break;
-            case Cell.CELL_TYPE_ERROR: // 故障
+            case ERROR: // 故障
                 cellValue = "非法字符";
                 break;
             default:
@@ -332,7 +332,7 @@ public class ExcelUtil {
         Field[] fields = cls.getDeclaredFields();
         List<Field> fieldList = Arrays.stream(fields)
                 .filter(field -> {
-                    ExcelColumn annotation = field.getAnnotation(ExcelColumn.class);
+                    com.haoo.iframe.utils.ExcelColumn annotation = field.getAnnotation(com.haoo.iframe.utils.ExcelColumn.class);
                     if (annotation != null && annotation.col() > 0) {
                         field.setAccessible(true);
                         return true;
@@ -340,7 +340,7 @@ public class ExcelUtil {
                     return false;
                 }).sorted(Comparator.comparing(field -> {
                     int col = 0;
-                    ExcelColumn annotation = field.getAnnotation(ExcelColumn.class);
+                    com.haoo.iframe.utils.ExcelColumn annotation = field.getAnnotation(com.haoo.iframe.utils.ExcelColumn.class);
                     if (annotation != null) {
                         col = annotation.col();
                     }
@@ -355,7 +355,7 @@ public class ExcelUtil {
             AtomicInteger aj = new AtomicInteger();
             //写入头部
             fieldList.forEach(field -> {
-                ExcelColumn annotation = field.getAnnotation(ExcelColumn.class);
+                com.haoo.iframe.utils.ExcelColumn annotation = field.getAnnotation(com.haoo.iframe.utils.ExcelColumn.class);
                 String columnName = "";
                 if (annotation != null) {
                     columnName = annotation.value();
