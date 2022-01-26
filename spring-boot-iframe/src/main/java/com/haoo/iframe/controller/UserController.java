@@ -3,16 +3,14 @@ package com.haoo.iframe.controller;
 import com.haoo.iframe.entity.Demo;
 import com.haoo.iframe.request.DemoReq;
 import com.haoo.iframe.service.DemoService;
+import com.haoo.iframe.util.FileConversionUtil;
 import com.haoo.iframe.util.FileUtil;
 import com.haoo.iframe.util.RedisUtil;
 import com.haoo.iframe.util.ReturnResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
@@ -69,6 +67,17 @@ public class UserController {
         //压缩文件 及 下载
         FileUtil.zipFiles(srcFile, zipFile);
         FileUtil.download(zipFilePath,response);
+    }
+
+    @ApiOperation("下载压缩包")
+    @PostMapping(value = "/uploadFile")
+    public void uploadFile(@RequestBody DemoReq req) {
+
+        File file = req.getFile();
+        System.out.println(file.getName());
+        System.out.println(file.getPath());
+        System.out.println(file.length());
+
     }
 
 

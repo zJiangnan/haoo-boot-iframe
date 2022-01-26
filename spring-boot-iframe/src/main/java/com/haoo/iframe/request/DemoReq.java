@@ -3,7 +3,9 @@ package com.haoo.iframe.request;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.Serializable;
 
 @Data
@@ -15,5 +17,7 @@ public class DemoReq implements Serializable {
 
     @ApiModelProperty(value = "压缩后文件储存路径", required = true)
     private String zipPath;
+
+    private File file;
 
 }
