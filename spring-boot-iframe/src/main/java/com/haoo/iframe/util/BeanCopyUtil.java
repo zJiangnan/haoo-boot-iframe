@@ -1,8 +1,10 @@
 package com.haoo.iframe.utils;
 
+import com.alibaba.fastjson.JSON;
 import jodd.bean.BeanCopy;
 
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -119,5 +121,15 @@ public class BeanCopyUtil {
             e.printStackTrace();
         }
         return null;
+    }
+
+    private static <T> T copyProperties(Object obj, Class<T> cls) {
+        String json = JSON.toJSONString(obj);
+        return JSON.parseObject(json, (Type) cls);
+    }
+
+    private static <E> E copyPropertiesArr(Object obj, Class<?> cls) {
+        String json = JSON.toJSONString(obj);
+        return (E) JSON.parseArray(json, cls);
     }
 }
