@@ -1,4 +1,4 @@
-package com.haoo.iframe.errcode;
+package com.haoo.iframe.common;
 
 /**
  * {@code BizException} 接管项目抛出的异常信息

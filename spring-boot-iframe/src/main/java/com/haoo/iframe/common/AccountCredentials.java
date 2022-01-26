@@ -1,4 +1,4 @@
-package com.haoo.iframe.entity;
+package com.haoo.iframe.common;
 
 import lombok.Data;
 @Data

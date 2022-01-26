@@ -1,4 +1,4 @@
-package com.haoo.iframe.config;
+package com.haoo.iframe.common;
 
 import com.haoo.iframe.util.PropertyUtil;
 import org.apache.commons.lang.ArrayUtils;

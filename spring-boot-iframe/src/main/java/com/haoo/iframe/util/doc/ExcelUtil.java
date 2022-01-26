@@ -1,7 +1,7 @@
 package com.haoo.iframe.util.doc;
 
-import com.haoo.iframe.errcode.ApiCode;
-import com.haoo.iframe.errcode.BizException;
+import com.haoo.iframe.common.ApiCode;
+import com.haoo.iframe.common.BizException;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.CharUtils;
