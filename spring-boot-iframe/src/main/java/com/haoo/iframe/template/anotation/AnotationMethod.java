@@ -13,6 +13,6 @@ public @interface AnotationMethod {
      * default 后面跟默认值
      * @return
      */
-    String value() default "Student.class";
+    Class value() default Student.class;
 
 }
