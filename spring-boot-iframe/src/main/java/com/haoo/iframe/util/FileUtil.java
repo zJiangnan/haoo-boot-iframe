@@ -236,22 +236,28 @@ public class FileUtil {
 
     }
 
+
     private static synchronized File getFile(String toSrc) {
-        //新建文件
+        //定义文件
         File newFile = new File(toSrc);
+        //是否存在:存在名称后面叠加_copy
         if (newFile.exists()) {
             StringBuffer buffer = new StringBuffer();
+            //文件路径
             String filePath = newFile.getParent() + File.separator;
+            //文件名称
             String fileName = newFile.getName().substring(0, newFile.getName().lastIndexOf("."));
+            //文件后缀
             String suffix = newFile.getName().substring(newFile.getName().lastIndexOf("."));
             buffer.append(filePath);
             buffer.append(fileName);
             buffer.append("_copy");
             buffer.append(suffix);
             String name = buffer.toString();
+            //递归
             return getFile(name);
         }
-        log.info("最终创建文件名:{}", newFile.getName());
+        log.info("last name:{}", newFile.getName());
         return newFile;
     }
 
