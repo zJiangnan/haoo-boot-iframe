@@ -34,7 +34,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 //swagger
                 .antMatchers("/swagger**/**","/webjars/**","/v2/**","/v3/**","/doc.html").permitAll()
                 // 所有请求需要身份认证
-                .anyRequest().authenticated()
+                //.anyRequest().authenticated()
                 .and()
                 // 添加一个过滤器 所有访问 /login 的请求交给 JWTLoginFilter 来处理 这个类处理所有的JWT相关内容
                 .addFilterBefore(new JWTLoginFilter("/login", authenticationManager()),
