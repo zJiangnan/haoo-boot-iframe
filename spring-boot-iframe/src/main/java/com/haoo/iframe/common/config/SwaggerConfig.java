@@ -1,6 +1,6 @@
-package com.haoo.iframe.common;
+package com.haoo.iframe.common.config;
 
-import com.haoo.iframe.util.PropertyUtil;
+import com.haoo.iframe.util.PropertiesUtil;
 import org.apache.commons.lang.ArrayUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,7 +27,7 @@ public class SwaggerConfig {
     @Bean
     public Docket custom_api() {
         return getDocket("custom_interface", "com.haoo.springbootiframe", "自定义配置接口", "自由定义显示的接口",
-                PropertyUtil.rules
+                PropertiesUtil.rules
         );
     }
 
@@ -43,7 +43,7 @@ public class SwaggerConfig {
     private Docket getDocket(String groupName, String basePackage, String apiName, String apiDesc, String[] paths) {
         ApiSelectorBuilder apiSelectorBuilder = new Docket(DocumentationType.OAS_30)
                 .apiInfo(apiInfo(apiName, apiDesc))
-                .enable(PropertyUtil.swaggerEnabled)
+                .enable(PropertiesUtil.swaggerEnabled)
                 .groupName(groupName)
                 .select()
 //                .apis(RequestHandlerSelectors.basePackage(basePackage));

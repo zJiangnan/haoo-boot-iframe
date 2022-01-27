@@ -1,4 +1,6 @@
-package com.haoo.iframe.common;
+package com.haoo.iframe.common.exception;
+
+import com.haoo.iframe.common.constant.ApiCode;
 
 /**
  * {@code BizException} 接管项目抛出的异常信息
