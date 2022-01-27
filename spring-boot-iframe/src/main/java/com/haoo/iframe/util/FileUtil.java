@@ -51,7 +51,7 @@ public class FileUtil {
      *
      * @param source
      */
-    public static void createFile(String source) {
+    public static File createFile(String source) {
         File file = new File(source);
         if (!file.exists()) {
             try {
@@ -60,7 +60,7 @@ public class FileUtil {
                 log.error("File fail:{}", e);
             }
         }
-
+        return file;
     }
 
     /**
@@ -205,6 +205,54 @@ public class FileUtil {
         } catch (Exception e) {
             log.error("download fail:{}", e);
         }
+    }
+
+    /***
+     * 上传文件
+     * @param file 要上传的文件
+     * @param toSrc 保存路径及名称 d:/test/test.txt
+     */
+    public static void uploadFile(File file, String toSrc) {
+
+        try {
+            //输入文件
+            RandomAccessFile in = new RandomAccessFile(file, "r");
+            //安全获取文件名
+            File newFile = getFile(toSrc);
+            //输出文件
+            RandomAccessFile out = new RandomAccessFile(newFile, "rw");
+            //定义byte基数
+            byte[] bytes = new byte[9048];
+            int len;
+            while ((len = in.read(bytes)) != -1) {
+                out.write(bytes, 0, len);
+            }
+            //关闭流
+            in.close();
+            out.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private static synchronized File getFile(String toSrc) {
+        //新建文件
+        File newFile = new File(toSrc);
+        if (newFile.exists()) {
+            StringBuffer buffer = new StringBuffer();
+            String filePath = newFile.getParent() + File.separator;
+            String fileName = newFile.getName().substring(0, newFile.getName().lastIndexOf("."));
+            String suffix = newFile.getName().substring(newFile.getName().lastIndexOf("."));
+            buffer.append(filePath);
+            buffer.append(fileName);
+            buffer.append("_copy");
+            buffer.append(suffix);
+            String name = buffer.toString();
+            return getFile(name);
+        }
+        log.info("最终创建文件名:{}", newFile.getName());
+        return newFile;
     }
 
     /**

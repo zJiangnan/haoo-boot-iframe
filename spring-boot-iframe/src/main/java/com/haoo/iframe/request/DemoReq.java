@@ -18,6 +18,4 @@ public class DemoReq implements Serializable {
     @ApiModelProperty(value = "压缩后文件储存路径", required = true)
     private String zipPath;
 
-    private File file;
-
 }
