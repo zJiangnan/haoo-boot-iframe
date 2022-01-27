@@ -1,4 +1,4 @@
-package com.haoo.iframe.util.doc;
+package com.haoo.iframe.common.annotation;
 
 import java.lang.annotation.*;
 
