@@ -1,4 +1,4 @@
-package com.haoo.iframe.utils;
+package com.haoo.iframe.util;
 
 import com.alibaba.fastjson.JSON;
 import jodd.bean.BeanCopy;
