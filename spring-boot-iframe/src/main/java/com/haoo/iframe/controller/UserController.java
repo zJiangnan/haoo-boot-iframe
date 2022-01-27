@@ -70,8 +70,8 @@ public class UserController {
     }
 
     @ApiOperation("下载压缩包")
-    @PostMapping(value = "/uploadFile")
-    public void uploadFile(@RequestBody DemoReq req) {
+    @PostMapping(value = "/uploadFile/{pathParam}")
+    public void uploadFile(@RequestBody DemoReq req,@PathVariable String pathParam) {
 
         File file = req.getFile();
         System.out.println(file.getName());

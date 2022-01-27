@@ -1,6 +1,11 @@
 package com.haoo.iframe.util;
 
+import com.haoo.iframe.common.ApiCode;
+import com.haoo.iframe.common.BizException;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
@@ -369,6 +374,66 @@ public class FileUtil {
         }
     }
 
+    /**
+     * 将 MultipartFile 类型文件流转为 File 类型
+     * @param multipartFile
+     * @return
+     */
+    public static File fileVMultipartFile(MultipartFile multipartFile) {
+//        选择用缓冲区来实现这个转换即使用java 创建的临时文件 使用 MultipartFile.transferto()方法
+        File file = null;
+        try {
+            String originalFilename = multipartFile.getOriginalFilename();
+            String[] filename = originalFilename.split("\\.");
+            file=File.createTempFile(filename[0], filename[1]);
+            multipartFile.transferTo(file);
+            file.deleteOnExit();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return file;
+    }
+
+    /**
+     * 将 File 类型文件流转为 MultipartFile 类型
+     * @param path 路径
+     * @param suffix 文件类型
+     * @param fileName 文件名
+     * @return
+     */
+    public static MultipartFile multipartFileVFile(String path, String suffix, String fileName) {
+        File file = new File(path + "/" + fileName);
+        MultipartFile mulFile = null;
+        try {
+            mulFile = new MockMultipartFile(
+                    fileName, //文件名
+                    fileName, //originalFileName 相当于上传文件在客户机上的文件名
+                    suffix, //文件类型
+                    new FileInputStream(file) //文件流
+            );
+        } catch (Exception e) {
+            throw new BizException(ApiCode.FAIL.getCode(), "文件转换失败");
+        }
+        return mulFile;
+    }
+
+    /**
+     * 将 Workbook 转 MultipartFile 类型
+     * @param workbook Excel
+     * @param fileName 文件名
+     * @param fileType 文件后缀；文件类型
+     * @return
+     * @throws IOException
+     */
+    public static MultipartFile workbookFile(Workbook workbook, String fileName, String fileType) throws IOException {
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        workbook.write(bos);
+        byte[] barray = bos.toByteArray();
+        InputStream is =new ByteArrayInputStream(barray);
+        MultipartFile mf = new MockMultipartFile(fileName,fileName,fileType,is);
+        return mf;
+    }
+
     public static void showMethod() {
         OtherUtil.println("文件切片:【splitFile】");
         OtherUtil.println("文件切片合并:【mergeSplitFile】");
@@ -381,6 +446,9 @@ public class FileUtil {
         OtherUtil.println("下载文件方法:【download】");
         OtherUtil.println("压缩文件:【zipFiles】");
         OtherUtil.println("解压文件:【unZipFiles】");
+        OtherUtil.println("将 MultipartFile 类型文件流转为 File 类型:【fileVMultipartFile】");
+        OtherUtil.println("将 File 类型文件流转为 MultipartFile 类型:【multipartFileVFile】");
+        OtherUtil.println("将 Workbook 转 MultipartFile 类型:【workbookFile】");
     }
 
 
@@ -392,24 +460,9 @@ public class FileUtil {
         int count = 8;
         int temCount = count;
         String tempFile = file;
-//        splitFile(file, count);
+        splitFile(file, count);
         mergeSplitFile(file, tempFile, temCount);
-        for (int i = 0; i < temCount; i++) {
-            deleteFile(tempFile + "_" + i + ".tmp");
-        }
 
-        //2个源文件
-        File f1 = new File("D:\\ziptest\\test\\abc.txt");
-        File f2 = new File("D:\\ziptest\\test\\test.zip");
-        File[] srcfile = {f1, f2};
-        //压缩后的文件
-        File zipfile = new File("D:\\ziptest\\test\\bao.zip");
-        zipFiles(srcfile, zipfile);
-        //需要解压缩的文件
-        //File file=new File("D:\\workspace\\flexTest\\src\\com\\biao\\test\\biao.zip");
-        //解压后的目标目录
-        //String dir="D:\\workspace\\flexTest\\src\\com\\biao\\test\\";
-        //ZipFileUtil.unZipFiles(file, dir);
 
     }
 
