@@ -1,9 +1,8 @@
-package com.haoo.iframe.controller;
+package com.haoo.iframe.controller.user;
 
 import com.haoo.iframe.entity.Demo;
 import com.haoo.iframe.request.DemoReq;
 import com.haoo.iframe.service.DemoService;
-import com.haoo.iframe.util.FileConversionUtil;
 import com.haoo.iframe.util.FileUtil;
 import com.haoo.iframe.util.RedisUtil;
 import com.haoo.iframe.util.ReturnResponse;
