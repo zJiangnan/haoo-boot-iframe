@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 public class ReflexUtils {
 
     private static boolean eqPackage = true;
-    private static String packageUrl = "com.huawei.sharedrive.cloudapp.test";
+    private static String packageUrl = "com.haoo.iframe";
 
 
     public static void invokeMethod(String methodName, Class<?> cls) {
