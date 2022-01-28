@@ -2,7 +2,7 @@ package com.haoo.iframe.jwt.filter;
 
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.haoo.iframe.common.constant.AccountCredentials;
+import com.haoo.iframe.common.sysparameter.AccountCredentials;
 import com.haoo.iframe.jwt.service.TokenAuthenticationService;
 import com.haoo.iframe.util.JSONResult;
 import org.springframework.security.authentication.AuthenticationManager;

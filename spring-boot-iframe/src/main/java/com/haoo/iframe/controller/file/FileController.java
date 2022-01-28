@@ -6,13 +6,10 @@ import com.haoo.iframe.service.FileService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-@Api(tags = "测试控制器")
+@Api(tags = "文件管理")
 @RestController
 @RequestMapping("/api/file/")
 public class FileController {
@@ -37,6 +34,14 @@ public class FileController {
          */
 
         fileService.upload(req,multipartFiles);
+
+    }
+
+    @ApiOperation("暂停上传")
+    @PostMapping(value = "/pause/{files}")
+    public void pause(@PathVariable String... files) {
+
+        fileService.pause(files);
 
     }
 }

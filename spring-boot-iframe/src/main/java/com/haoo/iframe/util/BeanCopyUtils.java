@@ -1,4 +1,4 @@
-package com.haoo.iframe.utils;
+package com.haoo.iframe.util;
 
 import com.alibaba.fastjson.JSON;
 import jodd.bean.BeanCopy;
@@ -19,7 +19,7 @@ import java.util.List;
  * @version 1.0
  * @see jodd.bean.BeanCopy
  **/
-public class BeanCopyUtil {
+public class BeanCopyUtils {
 
     /**
      * 单个对象进行 拷贝
