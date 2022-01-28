@@ -13,7 +13,7 @@ public class UploadReq implements Serializable {
     @ApiModelProperty(value = "上传路径", required = true)
     private String filePath;
 
-    //断点续传指针
+    @ApiModelProperty(value = "断点续传指针")
     private long pos;
 
 }
