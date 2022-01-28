@@ -14,7 +14,7 @@ import java.util.Properties;
  * @author haoo
  */
 @Slf4j
-public class PropertiesUtil {
+public class PropertiesUtils {
     private static Map<String, Map<String, Object>> ymlMap = new HashMap<>();
 
     private static Properties property = new Properties();
@@ -23,11 +23,11 @@ public class PropertiesUtil {
 
     static {
         try (
-                InputStream in = PropertiesUtil.class.getResourceAsStream("/swagger-custom.properties");
+                InputStream in = PropertiesUtils.class.getResourceAsStream("/swagger-custom.properties");
         ) {
             property.load(in);
-            rules = PropertiesUtil.getProperty("rules").split(",");
-            swaggerEnabled = Boolean.parseBoolean(PropertiesUtil.getProperty("swaggerEnabled"));
+            rules = PropertiesUtils.getProperty("rules").split(",");
+            swaggerEnabled = Boolean.parseBoolean(PropertiesUtils.getProperty("swaggerEnabled"));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -40,7 +40,7 @@ public class PropertiesUtil {
     static {
         Yaml yaml = new Yaml();
         try (
-                InputStream in = PropertiesUtil.class.getClassLoader().getResourceAsStream("application-prod.yml");
+                InputStream in = PropertiesUtils.class.getClassLoader().getResourceAsStream("application-prod.yml");
         ) {
             ymlMap = yaml.loadAs(in, HashMap.class);
         } catch (Exception e) {

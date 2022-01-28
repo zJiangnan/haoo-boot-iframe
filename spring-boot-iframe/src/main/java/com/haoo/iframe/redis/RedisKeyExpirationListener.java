@@ -38,7 +38,7 @@ public class RedisKeyExpirationListener extends KeyExpirationEventMessageListene
             //String linkCode = expiredKey.substring(expiredKey.lastIndexOf("_") + 1);
             //String source = customConfig.getDlpServerFileUrl() + linkCode;
             //调用删除文件方法
-            //FileUtil.removeDir(source);
+            //FileUtils.removeDir(source);
         }
     }
 

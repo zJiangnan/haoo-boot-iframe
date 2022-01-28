@@ -3,8 +3,8 @@ package com.haoo.iframe.controller.user;
 import com.haoo.iframe.entity.Demo;
 import com.haoo.iframe.request.DemoReq;
 import com.haoo.iframe.service.DemoService;
-import com.haoo.iframe.util.FileUtil;
-import com.haoo.iframe.util.RedisUtil;
+import com.haoo.iframe.util.FileUtils;
+import com.haoo.iframe.util.RedisUtils;
 import com.haoo.iframe.util.ReturnResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -25,7 +25,7 @@ import java.util.List;
 public class UserController {
 
     @Autowired
-    private RedisUtil redisUtil;
+    private RedisUtils redisUtils;
 
     @Autowired
     private DemoService demoService;
@@ -67,8 +67,8 @@ public class UserController {
         String zipFilePath = req.getZipPath();
         File zipFile = new File(zipFilePath);
         //压缩文件 及 下载
-        FileUtil.zipFiles(srcFile, zipFile);
-        FileUtil.download(zipFilePath, response);
+        FileUtils.zipFiles(srcFile, zipFile);
+        FileUtils.download(zipFilePath, response);
     }
 
 
