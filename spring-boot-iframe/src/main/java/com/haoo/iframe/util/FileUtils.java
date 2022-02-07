@@ -5,6 +5,7 @@ import com.haoo.iframe.common.enums.ApiCode;
 import com.haoo.iframe.common.exception.BizException;
 import com.haoo.iframe.common.sysparameter.UploadParameter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
@@ -227,8 +228,9 @@ public class FileUtils {
             if (newFile.exists()) {
                 fis = new FileInputStream(file);
                 fisNew = new FileInputStream(newFile);
-                //上传文件与本地文件是否相等(字节相等视为相等)
-                if (fis.available() == fisNew.available()) return;
+                //上传文件与本地文件是否相等
+                //fis.available() 字节
+                if(DigestUtils.md5Hex(fis).equals(DigestUtils.md5Hex(fisNew))) return;
 
                 in.seek(param.getPos());
                 // 声明可读写文件
@@ -547,16 +549,20 @@ public class FileUtils {
     }
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         //方法说明
-        showMethod();
-
-        String file = "C:\\Users\\ccp-114\\Desktop\\ddd\\eeeeee.docx";
-        int count = 8;
-        int temCount = count;
-        String tempFile = file;
-        splitFile(file, count);
+//        showMethod();
+//
+//        String file = "C:\\Users\\ccp-114\\Desktop\\ddd\\eeeeee.docx";
+//        int count = 8;
+//        int temCount = count;
+//        String tempFile = file;
+//        splitFile(file, count);
         //mergeSplitFile(file, tempFile, temCount);
+
+        System.out.println(DigestUtils.md5Hex(new FileInputStream(new File("C:\\Users\\ccp-114\\Desktop\\ddd\\eeeeee.docx"))));
+
+        System.out.println(DigestUtils.md5Hex(new FileInputStream(new File("C:\\Users\\ccp-114\\Desktop\\ddd\\eee上传.docx"))));
 
 
     }
