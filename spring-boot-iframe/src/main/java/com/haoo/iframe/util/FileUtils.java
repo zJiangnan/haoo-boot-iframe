@@ -253,7 +253,7 @@ public class FileUtils {
                 out.write(bytes, 0, len);
             }
             log.warn("file pos:{}", in.getFilePointer());
-            log.info("Stop downloading....", System.currentTimeMillis());
+            log.info("Stop downloading....{}", System.currentTimeMillis());
             //关闭流
             in.close();
             out.close();
