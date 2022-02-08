@@ -4,7 +4,6 @@ import com.haoo.iframe.common.constant.UtilConstant;
 import com.haoo.iframe.common.sysparameter.UploadParameter;
 import com.haoo.iframe.request.UploadReq;
 import com.haoo.iframe.service.FileService;
-import com.haoo.iframe.util.BeanCopyUtils;
 import com.haoo.iframe.util.FileUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -30,8 +29,9 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public void pause(String... files) {
-        for (String file : files){
-            UtilConstant.MAP.put(file,false);
+        for (String file : files) {
+            //暂停的文件标识
+            UtilConstant.MAP.put(file, false);
         }
     }
 }
