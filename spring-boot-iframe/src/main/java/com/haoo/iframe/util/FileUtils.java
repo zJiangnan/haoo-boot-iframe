@@ -228,8 +228,8 @@ public class FileUtils {
             if (newFile.exists()) {
                 fis = new FileInputStream(file);
                 fisNew = new FileInputStream(newFile);
-                //上传文件与本地文件是否相等
                 //fis.available() 字节
+                //校验MD5数字签名，判断是否同一文件（上传文件与本地文件是否相等）
                 if(DigestUtils.md5Hex(fis).equals(DigestUtils.md5Hex(fisNew))) return;
 
                 in.seek(param.getPos());
@@ -541,6 +541,7 @@ public class FileUtils {
         OtherUtils.println("创建目录:【mkDirs】");
         OtherUtils.println("删除文件夹及目录下所有文件:【removeDir】");
         OtherUtils.println("下载文件方法:【download】");
+        OtherUtils.println("上传文件方法:【uploadFile】");
         OtherUtils.println("压缩文件:【zipFiles】");
         OtherUtils.println("解压文件:【unZipFiles】");
         OtherUtils.println("将 MultipartFile 类型文件流转为 File 类型:【fileVMultipartFile】");
@@ -559,10 +560,6 @@ public class FileUtils {
 //        String tempFile = file;
 //        splitFile(file, count);
         //mergeSplitFile(file, tempFile, temCount);
-
-        System.out.println(DigestUtils.md5Hex(new FileInputStream(new File("C:\\Users\\ccp-114\\Desktop\\ddd\\eeeeee.docx"))));
-
-        System.out.println(DigestUtils.md5Hex(new FileInputStream(new File("C:\\Users\\ccp-114\\Desktop\\ddd\\eee上传.docx"))));
 
 
     }
