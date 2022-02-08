@@ -230,7 +230,7 @@ public class FileUtils {
                 fisNew = new FileInputStream(newFile);
                 //fis.available() 字节
                 //校验MD5数字签名，判断是否同一文件（上传文件与本地文件是否相等）
-                if(DigestUtils.md5Hex(fis).equals(DigestUtils.md5Hex(fisNew))) return;
+                if (DigestUtils.md5Hex(fis).equals(DigestUtils.md5Hex(fisNew))) return;
 
                 in.seek(param.getPos());
                 // 声明可读写文件
@@ -248,12 +248,12 @@ public class FileUtils {
             //定义byte基数
             byte[] bytes = new byte[9048];
             int len;
-            log.info("Start downloading....{}",System.currentTimeMillis());
+            log.info("Start downloading....{}", System.currentTimeMillis());
             while ((len = in.read(bytes)) != -1 && UtilConstant.MAP.get(newFile.getName())) {
                 out.write(bytes, 0, len);
             }
             log.warn("file pos:{}", in.getFilePointer());
-            log.info("Stop downloading....",System.currentTimeMillis());
+            log.info("Stop downloading....", System.currentTimeMillis());
             //关闭流
             in.close();
             out.close();
