@@ -7,7 +7,7 @@ import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.stereotype.Component;
 
 /**
- * @author Simon
+ * @author Haoo
  * 定义监听器
  * 该接口监听所有db的过期事件keyevent@*:expired
  */
@@ -33,12 +33,12 @@ public class RedisKeyExpirationListener extends KeyExpirationEventMessageListene
         // 用户做自己的业务处理即可,注意message.toString()可以获取失效的key
         String expiredKey = message.toString();
         if (expiredKey.startsWith("redis_")) {
-            System.out.println(customConfig+"-"+expiredKey);
+            System.out.println(customConfig + "-" + expiredKey);
             //根据key截取linkCode 拼接完整路径
             //String linkCode = expiredKey.substring(expiredKey.lastIndexOf("_") + 1);
             //String source = customConfig.getDlpServerFileUrl() + linkCode;
             //调用删除文件方法
-            //FileUtil.removeDir(source);
+            //FileUtils.removeDir(source);
         }
     }
 

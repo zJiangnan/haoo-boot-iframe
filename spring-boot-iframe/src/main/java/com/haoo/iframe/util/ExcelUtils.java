@@ -1,7 +1,7 @@
 package com.haoo.iframe.util;
 
 import com.haoo.iframe.common.annotation.ExcelColumn;
-import com.haoo.iframe.common.constant.ApiCode;
+import com.haoo.iframe.common.enums.ApiCode;
 import com.haoo.iframe.common.exception.BizException;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.BooleanUtils;
@@ -38,9 +38,9 @@ import java.util.stream.Stream;
  * @CreateTime: 2021/10/26 5:35 下午
  * @Description: Excel操作工具类
  **/
-public class ExcelUtil {
+public class ExcelUtils {
 
-    private final static Logger log = LoggerFactory.getLogger(ExcelUtil.class);
+    private final static Logger log = LoggerFactory.getLogger(ExcelUtils.class);
 
     private final static String EXCEL2003 = "xls";
     private final static String EXCEL2007 = "xlsx";

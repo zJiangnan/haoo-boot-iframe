@@ -1,4 +1,4 @@
-package com.haoo.iframe.common.constant;
+package com.haoo.iframe.common.enums;
 
 /**
  * {@code ApiCode}定义异常 code 和 异常 message 信息

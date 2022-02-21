@@ -1,8 +1,11 @@
 package com.haoo.iframe.util;
 
-import com.haoo.iframe.common.constant.ApiCode;
+import com.haoo.iframe.common.constant.UtilConstant;
+import com.haoo.iframe.common.enums.ApiCode;
 import com.haoo.iframe.common.exception.BizException;
+import com.haoo.iframe.common.sysparameter.UploadParameter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,7 +19,7 @@ import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
 @Slf4j
-public class FileUtil {
+public class FileUtils {
 
     /**
      * 在新的目录生成重命名文件
@@ -51,7 +54,7 @@ public class FileUtil {
      *
      * @param source
      */
-    public static void createFile(String source) {
+    public static File createFile(String source) {
         File file = new File(source);
         if (!file.exists()) {
             try {
@@ -60,7 +63,7 @@ public class FileUtil {
                 log.error("File fail:{}", e);
             }
         }
-
+        return file;
     }
 
     /**
@@ -207,6 +210,97 @@ public class FileUtil {
         }
     }
 
+    /***
+     * 上传文件
+     * @param file 要上传的文件
+     * @param param 具体
+     */
+    public static void uploadFile(File file, UploadParameter param) {
+        FileInputStream fis = null;
+        FileInputStream fisNew = null;
+        RandomAccessFile out = null;
+        try {
+            //声明可读文件
+            RandomAccessFile in = new RandomAccessFile(file, UtilConstant.RANDOM_ACCESS_FILE_R);
+
+            // 生成文件
+            File newFile = new File(param.getSavePath());
+            if (newFile.exists()) {
+                fis = new FileInputStream(file);
+                fisNew = new FileInputStream(newFile);
+                //fis.available() 字节
+                //校验MD5数字签名，判断是否同一文件（上传文件与本地文件是否相等）
+                if (DigestUtils.md5Hex(fis).equals(DigestUtils.md5Hex(fisNew))) return;
+
+                in.seek(param.getPos());
+                // 声明可读写文件
+                out = new RandomAccessFile(newFile, UtilConstant.RANDOM_ACCESS_FILE_RW);
+                // 跳转指针
+                out.seek(param.getPos());
+            } else {
+                //创建文件夹
+                mkDirs(newFile.getParent());
+                out = new RandomAccessFile(newFile, UtilConstant.RANDOM_ACCESS_FILE_RW);
+            }
+            UtilConstant.MAP.put(newFile.getName(), true);
+
+
+            //定义byte基数
+            byte[] bytes = new byte[9048];
+            int len;
+            log.info("Start downloading....{}", System.currentTimeMillis());
+            while ((len = in.read(bytes)) != -1 && UtilConstant.MAP.get(newFile.getName())) {
+                out.write(bytes, 0, len);
+            }
+            log.warn("file pos:{}", in.getFilePointer());
+            log.info("Stop downloading....{}", System.currentTimeMillis());
+            //关闭流
+            in.close();
+            out.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (fis != null && fisNew != null) {
+                    fis.close();
+                    fisNew.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            //删除临时文件temp
+            file.delete();
+        }
+
+    }
+
+
+    private static synchronized File getFile(UploadParameter param) {
+        //定义文件
+        File newFile = new File(param.getSavePath());
+        //是否存在:存在名称后面叠加_copy
+        if (newFile.exists()) {
+            StringBuffer buffer = new StringBuffer();
+            //文件路径
+            String filePath = newFile.getParent() + File.separator;
+            //文件名称
+            String fileName = newFile.getName().substring(0, newFile.getName().lastIndexOf("."));
+            //文件后缀
+            String suffix = newFile.getName().substring(newFile.getName().lastIndexOf("."));
+            buffer.append(filePath);
+            buffer.append(fileName);
+            buffer.append(UtilConstant.FILE_UTIL_SUFFIX_COPY);
+            buffer.append(suffix);
+            String name = buffer.toString();
+            //递归
+            param.setSavePath(name);
+            return getFile(param);
+        }
+        UtilConstant.MAP.put(newFile.getName(), true);
+        log.info("last name:{}", newFile.getName());
+        return newFile;
+    }
+
     /**
      * 指定每一份文件的边界写入不同的文件中
      *
@@ -222,9 +316,9 @@ public class FileUtil {
 
         try {
             //声明切割文件磁盘空间
-            RandomAccessFile in = new RandomAccessFile(new File(file), "r");
+            RandomAccessFile in = new RandomAccessFile(new File(file), UtilConstant.RANDOM_ACCESS_FILE_R);
             //定义一个可读可写并且后缀名为.tmp二进制的临时文件
-            RandomAccessFile out = new RandomAccessFile(file + "_" + index + ".tmp", "rw");
+            RandomAccessFile out = new RandomAccessFile(file + "_" + index + ".tmp", UtilConstant.RANDOM_ACCESS_FILE_RW);
             //声明具体每一个文件字节数组为1024
             byte[] b = new byte[1024];
             //从指定文件读取字节流
@@ -256,7 +350,7 @@ public class FileUtil {
     private static void splitFile(String file, int count) {
         try {
             //预分配文件占用磁盘空间“r”表示只读的方式“rw”支持文件随机读取和写入
-            RandomAccessFile raf = new RandomAccessFile(new File(file), "r");
+            RandomAccessFile raf = new RandomAccessFile(new File(file), UtilConstant.RANDOM_ACCESS_FILE_R);
             //文件长度
             long length = raf.length();
             //计算切片后，每一文件的大小
@@ -293,11 +387,11 @@ public class FileUtil {
         RandomAccessFile raf = null;
         try {
             // 声明随机可读可写的文件
-            raf = new RandomAccessFile(new File(file), "rw");
+            raf = new RandomAccessFile(new File(file), UtilConstant.RANDOM_ACCESS_FILE_RW);
             // 开始合并文件，对应切片的二进制文件
             for (int i = 0; i < temCount; i++) {
                 RandomAccessFile reader = new RandomAccessFile(
-                        new File(tempFile + "_" + i + ".tmp"), "r");
+                        new File(tempFile + "_" + i + ".tmp"), UtilConstant.RANDOM_ACCESS_FILE_R);
                 byte[] b = new byte[1024];
                 int n = 0;
                 while ((n = reader.read(b)) != -1) {
@@ -376,6 +470,7 @@ public class FileUtil {
 
     /**
      * 将 MultipartFile 类型文件流转为 File 类型
+     *
      * @param multipartFile
      * @return
      */
@@ -385,9 +480,9 @@ public class FileUtil {
         try {
             String originalFilename = multipartFile.getOriginalFilename();
             String[] filename = originalFilename.split("\\.");
-            file=File.createTempFile(filename[0], filename[1]);
+            file = File.createTempFile(filename[0], filename[1]);
             multipartFile.transferTo(file);
-            file.deleteOnExit();
+            //大坑 file.deleteOnExit();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -396,8 +491,9 @@ public class FileUtil {
 
     /**
      * 将 File 类型文件流转为 MultipartFile 类型
-     * @param path 路径
-     * @param suffix 文件类型
+     *
+     * @param path     路径
+     * @param suffix   文件类型
      * @param fileName 文件名
      * @return
      */
@@ -419,6 +515,7 @@ public class FileUtil {
 
     /**
      * 将 Workbook 转 MultipartFile 类型
+     *
      * @param workbook Excel
      * @param fileName 文件名
      * @param fileType 文件后缀；文件类型
@@ -429,44 +526,43 @@ public class FileUtil {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         workbook.write(bos);
         byte[] barray = bos.toByteArray();
-        InputStream is =new ByteArrayInputStream(barray);
-        MultipartFile mf = new MockMultipartFile(fileName,fileName,fileType,is);
+        InputStream is = new ByteArrayInputStream(barray);
+        MultipartFile mf = new MockMultipartFile(fileName, fileName, fileType, is);
         return mf;
     }
 
     public static void showMethod() {
-        OtherUtil.println("文件切片:【splitFile】");
-        OtherUtil.println("文件切片合并:【mergeSplitFile】");
-        OtherUtil.println("移动文件并重命名:【renameFileTo】");
-        OtherUtil.println("创建文件:【createFile】");
-        OtherUtil.println("删除文件:【deleteFile】");
-        OtherUtil.println("文件迁移至【目录】:【dirsCopyTo】");
-        OtherUtil.println("创建目录:【mkDirs】");
-        OtherUtil.println("删除文件夹及目录下所有文件:【removeDir】");
-        OtherUtil.println("下载文件方法:【download】");
-        OtherUtil.println("压缩文件:【zipFiles】");
-        OtherUtil.println("解压文件:【unZipFiles】");
-        OtherUtil.println("将 MultipartFile 类型文件流转为 File 类型:【fileVMultipartFile】");
-        OtherUtil.println("将 File 类型文件流转为 MultipartFile 类型:【multipartFileVFile】");
-        OtherUtil.println("将 Workbook 转 MultipartFile 类型:【workbookFile】");
+        OtherUtils.println("文件切片:【splitFile】");
+        OtherUtils.println("文件切片合并:【mergeSplitFile】");
+        OtherUtils.println("移动文件并重命名:【renameFileTo】");
+        OtherUtils.println("创建文件:【createFile】");
+        OtherUtils.println("删除文件:【deleteFile】");
+        OtherUtils.println("文件迁移至【目录】:【dirsCopyTo】");
+        OtherUtils.println("创建目录:【mkDirs】");
+        OtherUtils.println("删除文件夹及目录下所有文件:【removeDir】");
+        OtherUtils.println("下载文件方法:【download】");
+        OtherUtils.println("上传文件方法:【uploadFile】");
+        OtherUtils.println("压缩文件:【zipFiles】");
+        OtherUtils.println("解压文件:【unZipFiles】");
+        OtherUtils.println("将 MultipartFile 类型文件流转为 File 类型:【fileVMultipartFile】");
+        OtherUtils.println("将 File 类型文件流转为 MultipartFile 类型:【multipartFileVFile】");
+        OtherUtils.println("将 Workbook 转 MultipartFile 类型:【workbookFile】");
     }
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         //方法说明
-        showMethod();
-
-        String file = "C:\\Users\\ccp-114\\Desktop\\ddd\\qqqqq.docx";
-        int count = 8;
-        int temCount = count;
-        String tempFile = file;
-        splitFile(file, count);
-        mergeSplitFile(file, tempFile, temCount);
+//        showMethod();
+//
+//        String file = "C:\\Users\\ccp-114\\Desktop\\ddd\\eeeeee.docx";
+//        int count = 8;
+//        int temCount = count;
+//        String tempFile = file;
+//        splitFile(file, count);
+        //mergeSplitFile(file, tempFile, temCount);
 
 
     }
-
-
 
 
 }

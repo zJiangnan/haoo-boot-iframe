@@ -4,7 +4,7 @@ import org.apache.commons.lang.StringUtils;
 
 import java.util.Random;
 
-public class OtherUtil {
+public class OtherUtils {
 
     public static void println(Object obj) {
         /*

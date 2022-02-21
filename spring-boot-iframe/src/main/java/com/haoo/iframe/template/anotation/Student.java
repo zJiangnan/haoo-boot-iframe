@@ -1,6 +1,5 @@
 package com.haoo.iframe.template.anotation;
 
-import com.alibaba.fastjson.JSON;
 
 public class Student {
 
