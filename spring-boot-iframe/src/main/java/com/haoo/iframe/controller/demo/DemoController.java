@@ -1,5 +1,6 @@
 package com.haoo.iframe.controller.demo;
 
+import com.haoo.iframe.template.aspect.SysLog;
 import com.haoo.iframe.util.RestTemplateUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class DemoController {
 
     @ApiOperation("测试")
+    @SysLog("测试系统日志")
     @GetMapping("/test")
     public String test() {
         try {
@@ -38,6 +40,7 @@ public class DemoController {
     }
 
     @ApiOperation("测试1")
+    @SysLog("测试被调用接口")
     @PostMapping("/test1")
     public String test1() {
         return "你好！";
