@@ -53,25 +53,4 @@ public class UserController {
         return new ReturnResponse(200, "成功", demoService.saveBatch(list));
     }
 
-    @ApiOperation("下载压缩包")
-    @PostMapping(value = "/downloadZip")
-    public void downloadZip(@RequestBody DemoReq req, HttpServletResponse response) {
-
-        File[] srcFile = new File[req.getSrcPath().length];
-
-        for (int i = 0; i < req.getSrcPath().length; i++) {
-            File file = new File(req.getSrcPath()[i]);
-            srcFile[i] = file;
-        }
-        //压缩后的文件目录
-        String zipFilePath = req.getZipPath();
-        File zipFile = new File(zipFilePath);
-        //压缩文件 及 下载
-        FileUtils.zipFiles(srcFile, zipFile);
-        FileUtils.download(zipFilePath, response);
-    }
-
-
-
-
 }
