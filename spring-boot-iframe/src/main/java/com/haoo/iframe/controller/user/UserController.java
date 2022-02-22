@@ -1,21 +1,16 @@
 package com.haoo.iframe.controller.user;
 
 import com.haoo.iframe.entity.Demo;
-import com.haoo.iframe.request.DemoReq;
 import com.haoo.iframe.service.DemoService;
-import com.haoo.iframe.util.FileUtils;
 import com.haoo.iframe.util.RedisUtils;
 import com.haoo.iframe.util.ReturnResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletResponse;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,7 +41,6 @@ public class UserController {
     @PostMapping(value = "/addUsers")
     public ReturnResponse addUsers() {
         List<Demo> list = new ArrayList<>();
-        Demo demo1 = new Demo();
         Demo demo = new Demo("wangerma", "man");
         demo.setTestName("testname");
         list.add(demo);
