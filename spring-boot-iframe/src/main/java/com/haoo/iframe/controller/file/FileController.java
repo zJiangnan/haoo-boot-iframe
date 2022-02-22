@@ -1,13 +1,18 @@
 package com.haoo.iframe.controller.file;
 
 
+import com.haoo.iframe.request.DemoReq;
 import com.haoo.iframe.request.UploadReq;
 import com.haoo.iframe.service.FileService;
+import com.haoo.iframe.util.FileUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 
 @Api(tags = "文件管理")
 @RestController
@@ -43,5 +48,23 @@ public class FileController {
 
         fileService.pause(files);
 
+    }
+
+    @ApiOperation("下载压缩包")
+    @PostMapping(value = "/downloadZip")
+    public void downloadZip(@RequestBody DemoReq req, HttpServletResponse response) {
+
+        File[] srcFile = new File[req.getSrcPath().length];
+
+        for (int i = 0; i < req.getSrcPath().length; i++) {
+            File file = new File(req.getSrcPath()[i]);
+            srcFile[i] = file;
+        }
+        //压缩后的文件目录
+        String zipFilePath = req.getZipPath();
+        File zipFile = new File(zipFilePath);
+        //压缩文件 及 下载
+        FileUtils.zipFiles(srcFile, zipFile);
+        FileUtils.download(zipFilePath, response);
     }
 }
