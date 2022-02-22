@@ -156,7 +156,7 @@ public class ExcelUtils {
         return dataList;
     }
 
-    public static <T> List<T> readExcel(String path, Class<T> cls, MultipartFile file) {
+    public static <T> List<T> readExcel(Class<T> cls, MultipartFile file) {
 
         String fileName = file.getOriginalFilename();
         if (!fileName.matches("^.+\\.(?i)(xls)$") && !fileName.matches("^.+\\.(?i)(xlsx)$")) {
