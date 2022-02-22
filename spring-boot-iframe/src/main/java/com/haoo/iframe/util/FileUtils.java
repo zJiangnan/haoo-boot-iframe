@@ -5,6 +5,7 @@ import com.haoo.iframe.common.enums.ApiCode;
 import com.haoo.iframe.common.exception.BizException;
 import com.haoo.iframe.common.sysparameter.UploadParameter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
@@ -227,8 +228,9 @@ public class FileUtils {
             if (newFile.exists()) {
                 fis = new FileInputStream(file);
                 fisNew = new FileInputStream(newFile);
-                //上传文件与本地文件是否相等(字节相等视为相等)
-                if (fis.available() == fisNew.available()) return;
+                //fis.available() 字节
+                //校验MD5数字签名，判断是否同一文件（上传文件与本地文件是否相等）
+                if (DigestUtils.md5Hex(fis).equals(DigestUtils.md5Hex(fisNew))) return;
 
                 in.seek(param.getPos());
                 // 声明可读写文件
@@ -246,12 +248,12 @@ public class FileUtils {
             //定义byte基数
             byte[] bytes = new byte[9048];
             int len;
-            log.info("Start downloading....{}",System.currentTimeMillis());
+            log.info("Start downloading....{}", System.currentTimeMillis());
             while ((len = in.read(bytes)) != -1 && UtilConstant.MAP.get(newFile.getName())) {
                 out.write(bytes, 0, len);
             }
             log.warn("file pos:{}", in.getFilePointer());
-            log.info("Stop downloading....",System.currentTimeMillis());
+            log.info("Stop downloading....{}", System.currentTimeMillis());
             //关闭流
             in.close();
             out.close();
@@ -539,6 +541,7 @@ public class FileUtils {
         OtherUtils.println("创建目录:【mkDirs】");
         OtherUtils.println("删除文件夹及目录下所有文件:【removeDir】");
         OtherUtils.println("下载文件方法:【download】");
+        OtherUtils.println("上传文件方法:【uploadFile】");
         OtherUtils.println("压缩文件:【zipFiles】");
         OtherUtils.println("解压文件:【unZipFiles】");
         OtherUtils.println("将 MultipartFile 类型文件流转为 File 类型:【fileVMultipartFile】");
@@ -547,15 +550,15 @@ public class FileUtils {
     }
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         //方法说明
-        showMethod();
-
-        String file = "C:\\Users\\ccp-114\\Desktop\\ddd\\eeeeee.docx";
-        int count = 8;
-        int temCount = count;
-        String tempFile = file;
-        splitFile(file, count);
+//        showMethod();
+//
+//        String file = "C:\\Users\\ccp-114\\Desktop\\ddd\\eeeeee.docx";
+//        int count = 8;
+//        int temCount = count;
+//        String tempFile = file;
+//        splitFile(file, count);
         //mergeSplitFile(file, tempFile, temCount);
 
 
