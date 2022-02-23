@@ -1,4 +1,4 @@
-package com.haoo.iframe.common.vo;
+package com.haoo.iframe.vo;
 
 import com.haoo.iframe.common.annotation.ExcelColumn;
 import lombok.Data;

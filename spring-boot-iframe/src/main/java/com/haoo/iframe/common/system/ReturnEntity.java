@@ -1,20 +1,20 @@
-package com.haoo.iframe.util;
+package com.haoo.iframe.common.system;
 
 import lombok.Data;
 
 @Data
-public class ReturnResponse<T> {
+public class ReturnEntity<T> {
     private Integer code;
     private String message;
     private T data;
 
-    public ReturnResponse(Integer code, String message, T data) {
+    public ReturnEntity(Integer code, String message, T data) {
         this.code = code;
         this.message = message;
         this.data = data;
     }
 
-    public ReturnResponse(Integer code, String message) {
+    public ReturnEntity(Integer code, String message) {
         this.code = code;
         this.message = message;
     }

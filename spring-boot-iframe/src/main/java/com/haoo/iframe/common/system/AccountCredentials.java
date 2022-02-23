@@ -1,4 +1,4 @@
-package com.haoo.iframe.common.sysparameter;
+package com.haoo.iframe.common.system;
 
 import lombok.Data;
 @Data

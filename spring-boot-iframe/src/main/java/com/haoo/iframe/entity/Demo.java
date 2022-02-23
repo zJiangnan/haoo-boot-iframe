@@ -10,15 +10,11 @@ import lombok.Data;
 public class Demo {
     @TableId
     private String name;
+
     @TableField("sex")
     private String sex;
+
     @TableField("test_name")
     private String testName;
 
-    public Demo(String name, String sex) {
-        this.name = name;
-        this.sex = sex;
-    }
-
-    public Demo() {}
 }

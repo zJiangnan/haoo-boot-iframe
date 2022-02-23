@@ -3,7 +3,7 @@ package com.haoo.iframe.util;
 import com.haoo.iframe.common.constant.UtilConstant;
 import com.haoo.iframe.common.enums.ApiCode;
 import com.haoo.iframe.common.exception.BizException;
-import com.haoo.iframe.common.sysparameter.UploadParameter;
+import com.haoo.iframe.common.system.UploadParameter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.poi.ss.usermodel.Workbook;
