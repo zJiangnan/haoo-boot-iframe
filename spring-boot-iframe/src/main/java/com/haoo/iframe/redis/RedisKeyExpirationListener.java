@@ -15,12 +15,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class RedisKeyExpirationListener extends KeyExpirationEventMessageListener {
 
-    public RedisKeyExpirationListener(RedisMessageListenerContainer listenerContainer) {
+    public RedisKeyExpirationListener(RedisMessageListenerContainer listenerContainer, CustomConfig customConfig) {
         super(listenerContainer);
+        this.customConfig = customConfig;
     }
 
-    @Autowired
-    private CustomConfig customConfig;
+    private final CustomConfig customConfig;
 
     /**
      * 针对redis数据失效事件，进行数据处理
