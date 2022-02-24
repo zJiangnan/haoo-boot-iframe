@@ -17,9 +17,6 @@ public class Role {
     @ApiModelProperty(value = "角色ID")
     private String rid;
 
-    @ApiModelProperty(value = "父级角色ID")
-    private String parentRid;
-
     @ApiModelProperty(value = "角色名称")
     private String roleName;
 

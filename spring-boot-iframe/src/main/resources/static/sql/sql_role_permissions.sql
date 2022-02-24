@@ -15,7 +15,6 @@ CREATE TABLE `haoo`.`user`  (
 
 CREATE TABLE `haoo`.`role`  (
   `rid` varchar(100) NOT NULL COMMENT '角色ID',
-  `parent_rid` varchar(100) NOT NULL COMMENT '父级角色ID',
   `role_name` varchar(50) NOT NULL COMMENT '角色名称',
   `created_time` datetime NULL COMMENT '创建时间',
 	`modified_time` datetime NULL COMMENT '修改时间',
@@ -26,7 +25,6 @@ CREATE TABLE `haoo`.`role`  (
 
 CREATE TABLE `haoo`.`permissions`  (
   `pid` varchar(100) NOT NULL COMMENT '权限ID',
-  `parent_pid` varchar(100) NOT NULL COMMENT '父权限',
   `permissions_name` varchar(200) NOT NULL COMMENT '权限名称',
 	`description` varchar(200) NULL COMMENT '权限描述',
   PRIMARY KEY (`pid`)

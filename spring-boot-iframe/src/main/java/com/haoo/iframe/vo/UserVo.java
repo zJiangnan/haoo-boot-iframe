@@ -5,11 +5,12 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-import java.util.Date;
-
 @Data
 @ApiModel(value = "用户表")
 public class UserVo extends BasePage {
+
+    @ApiModelProperty(value = "用户ID")
+    private String uid;
 
     @ApiModelProperty(value = "所属组织")
     private String orgId;

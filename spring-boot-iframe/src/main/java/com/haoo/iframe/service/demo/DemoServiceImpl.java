@@ -1,27 +1,28 @@
-package com.haoo.iframe.service.impl;
+package com.haoo.iframe.service.demo;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.haoo.iframe.common.constant.UtilConstant;
+import com.haoo.iframe.common.constant.Constants;
+import com.haoo.iframe.common.system.ReturnEntity;
 import com.haoo.iframe.common.system.UploadParameter;
 import com.haoo.iframe.entity.Demo;
-import com.haoo.iframe.mybatis.demo.DemoMapper;
+import com.haoo.iframe.mybatis.mapper.DemoMapper;
 import com.haoo.iframe.request.UploadReq;
-import com.haoo.iframe.service.DemoService;
-import com.haoo.iframe.common.system.ReturnEntity;
 import com.haoo.iframe.util.FileUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class DemoServiceImpl extends ServiceImpl<DemoMapper, Demo> implements DemoService {
 
-    @Autowired
-    private DemoMapper demoMapper;
+    private final DemoMapper demoMapper;
+
+    public DemoServiceImpl(DemoMapper demoMapper) {
+        this.demoMapper = demoMapper;
+    }
 
     @Override
     public ReturnEntity findPage() {
@@ -63,7 +64,7 @@ public class DemoServiceImpl extends ServiceImpl<DemoMapper, Demo> implements De
     public void pause(String... files) {
         for (String file : files) {
             //暂停的文件标识
-            UtilConstant.MAP.put(file, false);
+            Constants.MAP.put(file, false);
         }
     }
 }

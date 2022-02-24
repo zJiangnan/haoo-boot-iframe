@@ -1,4 +1,4 @@
-package com.haoo.iframe.mybatis.demo;
+package com.haoo.iframe.mybatis.mapper;
 
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;

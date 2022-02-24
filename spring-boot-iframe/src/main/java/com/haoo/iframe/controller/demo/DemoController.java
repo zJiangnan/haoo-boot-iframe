@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.haoo.iframe.entity.Demo;
 import com.haoo.iframe.request.DemoReq;
 import com.haoo.iframe.request.UploadReq;
-import com.haoo.iframe.service.DemoService;
+import com.haoo.iframe.service.demo.DemoService;
 import com.haoo.iframe.util.BeanCopyUtils;
 import com.haoo.iframe.util.ExcelUtils;
 import com.haoo.iframe.util.FileUtils;
@@ -37,7 +37,6 @@ public class DemoController {
 
     private final DemoService demoService;
 
-    @Autowired
     public DemoController(DemoService demoService) {
         this.demoService = demoService;
     }
