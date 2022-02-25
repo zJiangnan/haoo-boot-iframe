@@ -18,4 +18,13 @@ public class ReturnEntity<T> {
         this.code = code;
         this.message = message;
     }
+
+    @Override
+    public String toString() {
+        return "{\n" +
+                "    \"code\": \"" + code + "\",\n" +
+                "    \"message\": \"" + message + "\",\n" +
+                "    \"data\":\"" + data + "\"\n" +
+                "}";
+    }
 }
