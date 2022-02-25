@@ -41,15 +41,15 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
             // 这里设置权限和角色
             ArrayList<GrantedAuthority> authorities = new ArrayList<>();
 
-            //TODO 系统管理员
+            // 系统管理员
             authorities.add(new GrantedAuthorityImpl("ROLE_ADMIN"));
             authorities.add(new GrantedAuthorityImpl("AUTH_ADMIN"));
             authorities.add(new GrantedAuthorityImpl("AUTH_WRITE"));
-            //TODO 管理员
-            authorities.add(new GrantedAuthorityImpl("AUTH_ADMIN"));
-            authorities.add(new GrantedAuthorityImpl("AUTH_WRITE"));
-            //TODO 普通用户
-            authorities.add(new GrantedAuthorityImpl("AUTH_WRITE"));
+            // 管理员
+            //authorities.add(new GrantedAuthorityImpl("AUTH_ADMIN"));
+            //authorities.add(new GrantedAuthorityImpl("AUTH_WRITE"));
+            // 普通用户
+            //authorities.add(new GrantedAuthorityImpl("AUTH_WRITE"));
 
             // 生成令牌
             Authentication auth = new UsernamePasswordAuthenticationToken(name, password, authorities);
