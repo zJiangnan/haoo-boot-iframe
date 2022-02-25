@@ -44,7 +44,7 @@ public class InitServiceImpl implements InitService {
         //初始化用户登录账户信息
         List<User> list = userService.list();
         if (!CollectionUtils.isEmpty(list)) {
-            list.stream().forEach(user -> redisUtils.set(user.getLoginName(), user.getPassword()));
+            list.stream().forEach(user -> redisUtils.set(user.getLoginName(), user));
         }
     }
 

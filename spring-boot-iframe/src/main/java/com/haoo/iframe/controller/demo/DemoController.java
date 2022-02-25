@@ -15,6 +15,8 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -41,9 +43,16 @@ public class DemoController {
         this.demoService = demoService;
     }
 
-    @ApiOperation("测试")
+    @ApiOperation("获取当前登录用户信息")
     @GetMapping("/test")
-    public String test() {
+    public void test(){
+        Authentication getAuthentication = SecurityContextHolder.getContext().getAuthentication();
+        System.out.println(JSON.toJSON(getAuthentication));
+    }
+
+    @ApiOperation("测试")
+    @GetMapping("/test111")
+    public String test111() {
         try {
             ResponseEntity<String> post = RestTemplateUtils.post("http://echo:8080/t/test1", "", new HttpHeaders());
             System.out.println(post);
@@ -56,8 +65,8 @@ public class DemoController {
     }
 
     @ApiOperation("测试1")
-    @PostMapping("/test1")
-    public String test1() {
+    @PostMapping("/test1111")
+    public String test1111() {
         return "你好！";
     }
 

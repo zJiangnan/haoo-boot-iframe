@@ -5,7 +5,6 @@ import com.haoo.iframe.common.system.MD5;
 import com.haoo.iframe.jwt.service.impl.GrantedAuthorityImpl;
 import com.haoo.iframe.service.account.AccountService;
 import com.haoo.iframe.vo.UserVo;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,8 +18,11 @@ import java.util.ArrayList;
 // 自定义身份认证验证组件
 public class CustomAuthenticationProvider implements AuthenticationProvider {
 
-    @Autowired
-    private AccountService accountService;
+    private final AccountService accountService;
+
+    public CustomAuthenticationProvider(AccountService accountService) {
+        this.accountService = accountService;
+    }
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
@@ -30,8 +32,9 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 
         UserVo user = accountService.loginUser(name);
         //用户不存在
-        if (ObjectUtils.isEmpty(user))
+        if (ObjectUtils.isEmpty(user)){
             throw new BadCredentialsException(ApiCode.CLIENT_B_USER_ACCOUNT_NOT_EXIST.getMessage());
+        }
 
         // 认证逻辑
         if (MD5.getMD5String(password).equals(user.getPassword())) {
