@@ -37,7 +37,9 @@ public class TokenAuthenticationServiceImpl implements TokenAuthenticationServic
 
     @Override
     public void addAuthentication(HttpServletResponse response, Authentication auth) {
+        // 获取认证的用户名
         String username = auth.getName();
+        // 设置 权限（角色）
         String authorities = String.join(",", auth.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()));
         // 生成JWT
         String JWT = Jwts.builder()
