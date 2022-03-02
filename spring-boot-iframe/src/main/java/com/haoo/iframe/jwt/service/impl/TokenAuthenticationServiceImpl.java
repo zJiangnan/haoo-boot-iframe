@@ -1,6 +1,7 @@
 package com.haoo.iframe.jwt.service.impl;
 
 import com.haoo.iframe.common.enums.ApiCode;
+import com.haoo.iframe.common.system.MD5;
 import com.haoo.iframe.common.system.ReturnEntity;
 import com.haoo.iframe.jwt.service.TokenAuthenticationService;
 import com.haoo.iframe.service.account.AccountService;
@@ -8,10 +9,12 @@ import com.haoo.iframe.vo.UserVo;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -24,10 +27,10 @@ import java.util.stream.Collectors;
 @Service
 public class TokenAuthenticationServiceImpl implements TokenAuthenticationService {
 
-    static final long EXPIRATIONTIME = 432_000_000;     // 5天
-    static final String SECRET = "P@ssw02d";            // JWT密码
-    static final String TOKEN_PREFIX = "Bearer";        // Token前缀
-    static final String HEADER_STRING = "Authorization";// 存放Token的Header Key
+    static final long EXPIRATIONTIME = 432_000_000;            // 5天
+    static final String SECRET = MD5.getMD5String("p@ssWord"); // jwt密钥 必须大于32个字符
+    static final String TOKEN_PREFIX = "Bearer";               // Token前缀
+    static final String HEADER_STRING = "Authorization";       // 存放Token的Header Key
 
     private final AccountService accountService;
 
@@ -50,11 +53,13 @@ public class TokenAuthenticationServiceImpl implements TokenAuthenticationServic
                 // 有效期设置
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATIONTIME))
                 // 签名设置
-                .signWith(SignatureAlgorithm.HS512, SECRET)
+                .signWith(Keys.hmacShaKeyFor(SECRET.getBytes()), SignatureAlgorithm.HS256)
                 .compact();
 
         // 将 JWT 写入 body
         try {
+            SecurityContextHolder.getContext()
+                    .setAuthentication(auth);
             response.setContentType("application/json");
             response.setCharacterEncoding("utf-8");
             response.setStatus(HttpServletResponse.SC_OK);
@@ -71,24 +76,31 @@ public class TokenAuthenticationServiceImpl implements TokenAuthenticationServic
 
         if (token != null) {
             // 解析 Token
-            Claims claims = Jwts.parser()
-                    // 验签
-                    .setSigningKey(SECRET)
-                    // 去掉 Bearer
-                    .parseClaimsJws(token.replace(TOKEN_PREFIX, ""))
-                    .getBody();
+            Claims claims = null;
+
+            try {
+                claims = Jwts.parserBuilder()
+                        // 验签
+                        .setSigningKey(Keys.hmacShaKeyFor(SECRET.getBytes()))
+                        // 去掉 Bearer
+                        .build().parseClaimsJws(token.replace(TOKEN_PREFIX, ""))
+                        .getBody();
+            } catch (Exception e) {
+                return null;
+            }
 
             // 拿用户名
             String user = claims.getSubject();
-            UserVo userVo = accountService.loginUser(user);
+
             // 得到 权限（角色）
             List<GrantedAuthority> authorities = AuthorityUtils.commaSeparatedStringToAuthorityList((String) claims.get("authorities"));
 
             // 返回验证令牌
             return user != null ?
-                    new UsernamePasswordAuthenticationToken(userVo, null, authorities) :
+                    new UsernamePasswordAuthenticationToken(null, null, authorities) :
                     null;
         }
         return null;
     }
+
 }

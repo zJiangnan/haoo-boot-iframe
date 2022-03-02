@@ -29,4 +29,7 @@ public class Role {
     @ApiModelProperty(value = "角色描述")
     private String description;
 
+    public Role(String roleName) {
+        this.roleName = roleName;
+    }
 }

@@ -19,6 +19,7 @@ import com.haoo.iframe.vo.UserPermissionsRelationVo;
 import com.haoo.iframe.vo.UserRoleRelationVo;
 import com.haoo.iframe.vo.UserVo;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
@@ -64,8 +65,8 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public void addUser(UserVo userVo) {
         User user = BeanCopyUtils.copy(userVo, User.class);
-        //password通过md5加密存储
-        userVo.setPassword(MD5.getMD5String(userVo.getPassword()));
+        //password通过BCrypt加密存储
+        user.setPassword(new BCryptPasswordEncoder().encode(userVo.getPassword()));
         userMapper.insert(user);
         redisUtils.set(user.getLoginName(), user);
     }
