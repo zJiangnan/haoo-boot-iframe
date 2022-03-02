@@ -16,11 +16,11 @@ import org.springframework.util.ObjectUtils;
 import java.util.ArrayList;
 
 // 自定义身份认证验证组件
-public class CustomAuthenticationProvider implements AuthenticationProvider {
+public class LoginProvider implements AuthenticationProvider {
 
     private final AccountService accountService;
 
-    public CustomAuthenticationProvider(AccountService accountService) {
+    public LoginProvider(AccountService accountService) {
         this.accountService = accountService;
     }
 

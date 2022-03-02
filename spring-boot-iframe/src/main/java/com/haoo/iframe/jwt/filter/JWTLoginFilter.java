@@ -61,6 +61,6 @@ public class JWTLoginFilter extends AbstractAuthenticationProcessingFilter {
         response.setContentType("application/json");
         response.setCharacterEncoding("utf-8");
         response.setStatus(HttpServletResponse.SC_OK);
-        response.getWriter().println(new ReturnEntity(ApiCode.LOGIN_EXCEPTION.getCode(), ApiCode.LOGIN_EXCEPTION.getMessage(), null));
+        response.getWriter().println(new ReturnEntity(ApiCode.LOGIN_EXCEPTION.getCode(), failed.getMessage(), null));
     }
 }

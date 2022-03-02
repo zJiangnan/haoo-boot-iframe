@@ -23,11 +23,13 @@ public class JWTAuthenticationFilter extends GenericFilterBean {
                          FilterChain filterChain)
             throws IOException, ServletException {
 
+        // 登录认证
         Authentication authentication = tokenAuthenticationService
                 .getAuthentication((HttpServletRequest) request);
-
+        //当前登陆信息
         SecurityContextHolder.getContext()
                 .setAuthentication(authentication);
+        //转发请求
         filterChain.doFilter(request, response);
     }
 }
