@@ -54,4 +54,33 @@ public class OtherUtils {
         return key;
     }
 
+    /**
+     * 敏感信息脱敏处理
+     *
+     * @return
+     */
+    public static String desensitization(String info) {
+        try {
+            if (null == info) {
+                return null;
+            }
+            //邮箱表达式
+            String emailReg = "[A-z]+[A-z0-9_-]*\\@[A-z0-9]+\\.[A-z]+";
+            //手机表达式
+            String phoneReg = "^1\\d{10}$";
+            if (info.matches(emailReg)) {
+                //邮箱
+                return info.replaceAll("(^\\w)[^@]*(@.*$)", "$1****$2");
+            } else if (info.matches(phoneReg)) {
+                return info.replaceAll("(^\\d{3})\\d.*(\\d{4})", "$1****$2");
+            } else if (info.length() == 1) {
+                return info;
+            }
+            return info.substring(0, info.length() / 2) + "**";
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return info;
+    }
+
 }

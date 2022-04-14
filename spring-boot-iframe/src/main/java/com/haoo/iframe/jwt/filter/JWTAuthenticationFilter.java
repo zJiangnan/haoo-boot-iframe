@@ -11,16 +11,25 @@ import java.io.IOException;
 
 public class JWTAuthenticationFilter extends GenericFilterBean {
 
+    private final TokenAuthenticationService tokenAuthenticationService;
+
+    public JWTAuthenticationFilter(TokenAuthenticationService tokenAuthenticationService) {
+        this.tokenAuthenticationService = tokenAuthenticationService;
+    }
+
     @Override
     public void doFilter(ServletRequest request,
                          ServletResponse response,
                          FilterChain filterChain)
             throws IOException, ServletException {
-        Authentication authentication = TokenAuthenticationService
-                .getAuthentication((HttpServletRequest)request);
 
+        // 登录认证
+        Authentication authentication = tokenAuthenticationService
+                .getAuthentication((HttpServletRequest) request);
+        //当前登陆信息
         SecurityContextHolder.getContext()
                 .setAuthentication(authentication);
-        filterChain.doFilter(request,response);
+        //转发请求
+        filterChain.doFilter(request, response);
     }
 }

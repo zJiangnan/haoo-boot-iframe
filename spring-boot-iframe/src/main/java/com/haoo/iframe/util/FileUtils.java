@@ -1,9 +1,9 @@
 package com.haoo.iframe.util;
 
-import com.haoo.iframe.common.constant.UtilConstant;
+import com.haoo.iframe.common.constant.Constants;
 import com.haoo.iframe.common.enums.ApiCode;
 import com.haoo.iframe.common.exception.BizException;
-import com.haoo.iframe.common.sysparameter.UploadParameter;
+import com.haoo.iframe.common.system.UploadParameter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -221,7 +221,7 @@ public class FileUtils {
         RandomAccessFile out = null;
         try {
             //声明可读文件
-            RandomAccessFile in = new RandomAccessFile(file, UtilConstant.RANDOM_ACCESS_FILE_R);
+            RandomAccessFile in = new RandomAccessFile(file, Constants.RANDOM_ACCESS_FILE_R);
 
             // 生成文件
             File newFile = new File(param.getSavePath());
@@ -234,22 +234,22 @@ public class FileUtils {
 
                 in.seek(param.getPos());
                 // 声明可读写文件
-                out = new RandomAccessFile(newFile, UtilConstant.RANDOM_ACCESS_FILE_RW);
+                out = new RandomAccessFile(newFile, Constants.RANDOM_ACCESS_FILE_RW);
                 // 跳转指针
                 out.seek(param.getPos());
             } else {
                 //创建文件夹
                 mkDirs(newFile.getParent());
-                out = new RandomAccessFile(newFile, UtilConstant.RANDOM_ACCESS_FILE_RW);
+                out = new RandomAccessFile(newFile, Constants.RANDOM_ACCESS_FILE_RW);
             }
-            UtilConstant.MAP.put(newFile.getName(), true);
+            Constants.MAP.put(newFile.getName(), true);
 
 
             //定义byte基数
             byte[] bytes = new byte[9048];
             int len;
             log.info("Start downloading....{}", System.currentTimeMillis());
-            while ((len = in.read(bytes)) != -1 && UtilConstant.MAP.get(newFile.getName())) {
+            while ((len = in.read(bytes)) != -1 && Constants.MAP.get(newFile.getName())) {
                 out.write(bytes, 0, len);
             }
             log.warn("file pos:{}", in.getFilePointer());
@@ -289,14 +289,14 @@ public class FileUtils {
             String suffix = newFile.getName().substring(newFile.getName().lastIndexOf("."));
             buffer.append(filePath);
             buffer.append(fileName);
-            buffer.append(UtilConstant.FILE_UTIL_SUFFIX_COPY);
+            buffer.append(Constants.FILE_UTIL_SUFFIX_COPY);
             buffer.append(suffix);
             String name = buffer.toString();
             //递归
             param.setSavePath(name);
             return getFile(param);
         }
-        UtilConstant.MAP.put(newFile.getName(), true);
+        Constants.MAP.put(newFile.getName(), true);
         log.info("last name:{}", newFile.getName());
         return newFile;
     }
@@ -316,9 +316,9 @@ public class FileUtils {
 
         try {
             //声明切割文件磁盘空间
-            RandomAccessFile in = new RandomAccessFile(new File(file), UtilConstant.RANDOM_ACCESS_FILE_R);
+            RandomAccessFile in = new RandomAccessFile(new File(file), Constants.RANDOM_ACCESS_FILE_R);
             //定义一个可读可写并且后缀名为.tmp二进制的临时文件
-            RandomAccessFile out = new RandomAccessFile(file + "_" + index + ".tmp", UtilConstant.RANDOM_ACCESS_FILE_RW);
+            RandomAccessFile out = new RandomAccessFile(file + "_" + index + ".tmp", Constants.RANDOM_ACCESS_FILE_RW);
             //声明具体每一个文件字节数组为1024
             byte[] b = new byte[1024];
             //从指定文件读取字节流
@@ -350,7 +350,7 @@ public class FileUtils {
     private static void splitFile(String file, int count) {
         try {
             //预分配文件占用磁盘空间“r”表示只读的方式“rw”支持文件随机读取和写入
-            RandomAccessFile raf = new RandomAccessFile(new File(file), UtilConstant.RANDOM_ACCESS_FILE_R);
+            RandomAccessFile raf = new RandomAccessFile(new File(file), Constants.RANDOM_ACCESS_FILE_R);
             //文件长度
             long length = raf.length();
             //计算切片后，每一文件的大小
@@ -387,11 +387,11 @@ public class FileUtils {
         RandomAccessFile raf = null;
         try {
             // 声明随机可读可写的文件
-            raf = new RandomAccessFile(new File(file), UtilConstant.RANDOM_ACCESS_FILE_RW);
+            raf = new RandomAccessFile(new File(file), Constants.RANDOM_ACCESS_FILE_RW);
             // 开始合并文件，对应切片的二进制文件
             for (int i = 0; i < temCount; i++) {
                 RandomAccessFile reader = new RandomAccessFile(
-                        new File(tempFile + "_" + i + ".tmp"), UtilConstant.RANDOM_ACCESS_FILE_R);
+                        new File(tempFile + "_" + i + ".tmp"), Constants.RANDOM_ACCESS_FILE_R);
                 byte[] b = new byte[1024];
                 int n = 0;
                 while ((n = reader.read(b)) != -1) {
